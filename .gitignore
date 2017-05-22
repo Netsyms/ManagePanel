@@ -1,0 +1,5 @@
+vendor
+settings.php
+nbproject/private
+*.sync-conflict*
+database.mwb.bak
