@@ -20,6 +20,13 @@ define("PAGES", [
             "static/js/users.js"
         ],
     ],
+    "edituser" => [
+        "title" => "edit user",
+        "navbar" => false,
+        "scripts" => [
+            "static/js/edituser.js"
+        ]
+    ],
     "404" => [
         "title" => "404 error"
     ]

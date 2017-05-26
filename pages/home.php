@@ -30,7 +30,7 @@ redirectifnotloggedin();
         <div class="panel panel-amber">
             <div class="panel-heading"><div class="panel-title"><?php lang("locked accounts") ?></div></div>
             <div class="panel-body">
-                <h1><i class="fa fa-fw fa-user-times"></i> <?php echo $database->count('accounts', ['OR' => ['acctstatus' => 2, 'acctstatus' => 3]]); ?></h1>
+                <h1><i class="fa fa-fw fa-user-times"></i> <?php echo $database->count('accounts', ['OR' => ['acctstatus #LOCKED_OR_DISABLED' => 2, 'acctstatus #CHANGE_PASSWORD' => 3]]); ?></h1>
             </div>
             <div class="panel-footer">
                 <a style="color: black;" href="app.php?page=users"><i class="fa fa-arrow-right fa-fw"></i> <?php lang('view users'); ?></a>

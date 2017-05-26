@@ -9,6 +9,7 @@ define("STRINGS", [
     "2fa prompt" => "Enter the six-digit code from your mobile authenticator app.",
     "2fa incorrect" => "Authentication code incorrect.",
     "login incorrect" => "Login incorrect.",
+    "no admin permission" => "You do not have permission to access this system.",
     "login server unavailable" => "Login server unavailable.  Try again later or contact technical support.",
     "account locked" => "This account has been disabled. Contact technical support.",
     "password expired" => "You must change your password before continuing.",
@@ -35,5 +36,15 @@ define("STRINGS", [
     "total users" => "Total Users",
     "view users" => "View Users",
     "normal accounts" => "Normal Accounts",
-    "locked accounts" => "Locked Accounts"
+    "locked accounts" => "Locked Accounts",
+    "editing user" => "Editing {user}",
+    "invalid userid" => "Invalid user ID.",
+    "user saved" => "User saved.",
+    "adding user" => "Adding new user",
+    "placeholder name" => "John Doe",
+    "placeholder username" => "jdoe",
+    "placeholder email address" => "jdoe@example.com",
+    "placeholder password" => "swordfish",
+    "new password" => "New Password",
+    "non-local account warning" => "This account is not locally managed.  Changes made here will not synchronize to the directory server and some attributes cannot be edited."
 ]);

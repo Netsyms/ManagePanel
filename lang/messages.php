@@ -12,5 +12,13 @@ define("MESSAGES", [
     "404_error" => [
         "string" => "page not found",
         "type" => "info"
+    ],
+    "invalid_userid" => [
+        "string" => "invalid userid",
+        "type" => "danger"
+    ],
+    "user_saved" => [
+        "string" => "user saved",
+        "type" => "success"
     ]
 ]);

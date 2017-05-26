@@ -11,11 +11,11 @@ redirectifnotloggedin();
         <tr>
             <th data-priority="0"></th>
             <th data-priority="1"><?php lang('actions'); ?></th>
-            <th data-priority="1"><?php lang('name'); ?></th>
-            <th data-priority="2"><?php lang('username'); ?></th>
-            <th data-priority="3"><?php lang('email'); ?></th>
-            <th data-priority="3"><?php lang('status'); ?></th>
-            <th data-priority="4"><?php lang('type'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-user"></i> <?php lang('name'); ?></th>
+            <th data-priority="2"><i class="fa fa-fw fa-id-badge"></i> <?php lang('username'); ?></th>
+            <th data-priority="3"><i class="fa fa-fw fa-envelope"></i> <?php lang('email'); ?></th>
+            <th data-priority="3"><i class="fa fa-fw fa-check-circle"></i> <?php lang('status'); ?></th>
+            <th data-priority="4"><i class="fa fa-fw fa-server"></i> <?php lang('type'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -54,11 +54,10 @@ redirectifnotloggedin();
         <tr>
             <th data-priority="0"></th>
             <th data-priority="1"><?php lang('actions'); ?></th>
-            <th data-priority="1"><?php lang('name'); ?></th>
-            <th data-priority="2"><?php lang('username'); ?></th>
-            <th data-priority="3"><?php lang('email'); ?></th>
-            <th data-priority="3"><?php lang('status'); ?></th>
-            <th data-priority="4"><?php lang('type'); ?></th>
-        </tr>
+            <th data-priority="1"><i class="fa fa-fw fa-user"></i> <?php lang('name'); ?></th>
+            <th data-priority="2"><i class="fa fa-fw fa-id-badge"></i> <?php lang('username'); ?></th>
+            <th data-priority="3"><i class="fa fa-fw fa-envelope"></i> <?php lang('email'); ?></th>
+            <th data-priority="3"><i class="fa fa-fw fa-check-circle"></i> <?php lang('status'); ?></th>
+            <th data-priority="4"><i class="fa fa-fw fa-server"></i> <?php lang('type'); ?></th>
     </tfoot>
 </table>
