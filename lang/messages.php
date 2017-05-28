@@ -32,5 +32,13 @@ define("MESSAGES", [
     "log_cleared" => [
         "string" => "log cleared",
         "type" => "success"
+    ],
+    "relationship_added" => [
+        "string" => "relationship added",
+        "type" => "success"
+    ],
+    "relationship_deleted" => [
+        "string" => "relationship deleted",
+        "type" => "success"
     ]
 ]);

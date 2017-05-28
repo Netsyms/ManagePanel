@@ -68,7 +68,7 @@ switch ($VARS['action']) {
         } else {
             $olddata = $database->select('accounts', '*', ['uid' => $VARS['id']])[0];
             $database->update('accounts', $data, ['uid' => $VARS['id']]);
-            insertAuthLog(17, $_SESSION['uid'], "OLD: " . $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus'] . "; NEW: " . $data['username'] . ", " . $data['realname'] . ", " . $data['email'] . ", " . $data['acctstatus']);
+            insertAuthLog(18, $_SESSION['uid'], "OLD: " . $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus'] . "; NEW: " . $data['username'] . ", " . $data['realname'] . ", " . $data['email'] . ", " . $data['acctstatus']);
         }
 
         returnToSender("user_saved");
@@ -85,6 +85,33 @@ switch ($VARS['action']) {
         $database->delete('authlog');
         insertAuthLog(15, $_SESSION['uid'], lang2("removed n entries", ['n' => $rows], false));
         returnToSender("log_cleared");
+    case "addmanager":
+        if (!$database->has('accounts', ['username' => $VARS['manager']])) {
+            returnToSender("invalid_userid");
+        }
+        if (!$database->has('accounts', ['username' => $VARS['employee']])) {
+            returnToSender("invalid_userid");
+        }
+        $manageruid = $database->select('accounts', 'uid', ['username' => $VARS['manager']])[0];
+        $employeeuid = $database->select('accounts', 'uid', ['username' => $VARS['employee']])[0];
+        $database->insert('managers', ['managerid' => $manageruid, 'employeeid' => $employeeuid]);
+        returnToSender("relationship_added");
+    case "delmanager":
+        if (!$database->has('managers', ['managerid' => $VARS['mid']])) {
+            returnToSender("invalid_userid");
+        }
+        if (!$database->has('managers', ['employeeid' => $VARS['eid']])) {
+            returnToSender("invalid_userid");
+        }
+        $database->delete('managers', ['AND' => ['managerid' => $VARS['mid'], 'employeeid' => $VARS['eid']]]);
+        returnToSender("relationship_deleted");
+    case "autocomplete_user":
+        header("Content-Type: application/json");
+        if (is_empty($VARS['q']) || strlen($VARS['q']) < 3) {
+            exit(json_encode([]));
+        }
+        $data = $database->select('accounts', ['uid', 'username', 'realname (name)'], ["OR" => ['username[~]' => $VARS['q'], 'realname[~]' => $VARS['q']], "LIMIT" => 10]);
+        exit(json_encode($data));
     case "signout":
         session_destroy();
         header('Location: index.php');

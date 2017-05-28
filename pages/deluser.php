@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . "/../required.php";
+
+redirectifnotloggedin();
+
 if (!is_empty($VARS['id'])) {
     if ($database->has('accounts', ['uid' => $VARS['id']])) {
         $userdata = $database->select('accounts', ['[>]accttypes' => ['accttype' => 'typeid']], [

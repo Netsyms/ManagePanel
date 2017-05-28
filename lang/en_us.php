@@ -61,4 +61,15 @@ define("STRINGS", [
     "really clear log" => "Are you sure you want to purge the security log?  This action cannot be reversed.",
     "log cleared" => "Security log cleared.",
     "removed n entries" => "Removed {n} entries",
+    "security log entries" => "Security Log Entries",
+    "view security log" => "View Security Log",
+    "managers" => "Managers",
+    "manager" => "Manager",
+    "employee" => "Employee",
+    "delete relationship" => "Delete Relationship",
+    "really delete relationship" => "Are you sure you want to remove this manager-employee relationship?  This action cannot be reversed.",
+    "relationship deleted" => "Relationship deleted.",
+    "edit relationship" => "Edit Relationship",
+    "adding relationship" => "Adding Relationship",
+    "relationship added" => "Relationship added."
 ]);
