@@ -130,7 +130,11 @@ function lang2($key, $replace, $echo = true) {
 
 function dieifnotloggedin() {
     if ($_SESSION['loggedin'] != true) {
-        sendError("Session expired.  Please log out and log in again.");
+        die("You don't have permission to be here.");
+    }
+    require_once __DIR__ . "/lib/login.php";
+    if (account_has_permission($_SESSION['username'], "ADMIN") == FALSE) {
+        die("You don't have permission to be here.");
     }
 }
 

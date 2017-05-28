@@ -5,6 +5,7 @@
  */
 require_once __DIR__ . "/required.php";
 require_once __DIR__ . "/lib/login.php";
+require_once __DIR__ . "/lib/authlog.php";
 
 dieifnotloggedin();
 
@@ -42,18 +43,18 @@ switch ($VARS['action']) {
         if (is_empty($VARS['name']) || is_empty($VARS['username']) || is_empty($VARS['status'])) {
             returnToSender('invalid_parameters');
         }
-        
+
         if (!$database->has('acctstatus', ['statusid' => $VARS['status']])) {
             returnToSender("invalid_parameters");
         }
-        
+
         $data = [
             'realname' => $VARS['name'],
             'username' => $VARS['username'],
             'email' => $VARS['email'],
             'acctstatus' => $VARS['status']
         ];
-        
+
         if (!is_empty($VARS['pass'])) {
             $data['password'] = password_hash($VARS['pass'], PASSWORD_BCRYPT);
         }
@@ -63,11 +64,27 @@ switch ($VARS['action']) {
             $data['phone2'] = "";
             $data['accttype'] = 1;
             $database->insert('accounts', $data);
+            insertAuthLog(17, $_SESSION['uid'], $data['username'] . ", " . $data['realname'] . ", " . $data['email'] . ", " . $data['acctstatus']);
         } else {
+            $olddata = $database->select('accounts', '*', ['uid' => $VARS['id']])[0];
             $database->update('accounts', $data, ['uid' => $VARS['id']]);
+            insertAuthLog(17, $_SESSION['uid'], "OLD: " . $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus'] . "; NEW: " . $data['username'] . ", " . $data['realname'] . ", " . $data['email'] . ", " . $data['acctstatus']);
         }
 
         returnToSender("user_saved");
+    case "deleteuser":
+        if ($database->has('accounts', ['uid' => $VARS['id']]) !== TRUE) {
+            returnToSender("invalid_userid");
+        }
+        $olddata = $database->select('accounts', '*', ['uid' => $VARS['id']])[0];
+        $database->delete('accounts', ['uid' => $VARS['id']]);
+        insertAuthLog(16, $_SESSION['uid'], $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus']);
+        returnToSender("user_deleted");
+    case "clearlog":
+        $rows = $database->count('authlog');
+        $database->delete('authlog');
+        insertAuthLog(15, $_SESSION['uid'], lang2("removed n entries", ['n' => $rows], false));
+        returnToSender("log_cleared");
     case "signout":
         session_destroy();
         header('Location: index.php');

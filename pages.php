@@ -27,6 +27,27 @@ define("PAGES", [
             "static/js/edituser.js"
         ]
     ],
+    "deluser" => [
+        "title" => "delete user",
+        "navbar" => false
+    ],
+    "authlog" => [
+        "title" => "security log",
+        "navbar" => true,
+        "icon" => "list",
+        "styles" => [
+            "static/css/datatables.min.css",
+            "static/css/tables.css"
+        ],
+        "scripts" => [
+            "static/js/datatables.min.js",
+            "static/js/authlog.js"
+        ],
+    ],
+    "clearlog" => [
+        "title" => "clear log",
+        "navbar" => false
+    ],
     "404" => [
         "title" => "404 error"
     ]

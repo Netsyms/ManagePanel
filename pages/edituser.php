@@ -127,7 +127,7 @@ if ($userdata['typecode'] != "LOCAL") {
             <?php
             if ($editing) {
                 ?>
-                <a href="action.php?action=deleteuser&source=users&userid=<?php echo htmlspecialchars($VARS['id']); ?>" style="margin-top: 8px;" class="btn btn-danger btn-xs pull-right"><i class="fa fa-times"></i> <?php lang('delete'); ?></a>
+                <a href="app.php?page=deluser&id=<?php echo htmlspecialchars($VARS['id']); ?>" style="margin-top: 8px;" class="btn btn-danger btn-xs pull-right"><i class="fa fa-times"></i> <?php lang('delete'); ?></a>
                 <?php
             }
             ?>

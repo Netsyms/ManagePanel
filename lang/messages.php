@@ -20,5 +20,17 @@ define("MESSAGES", [
     "user_saved" => [
         "string" => "user saved",
         "type" => "success"
+    ],
+    "user_deleted" => [
+        "string" => "user deleted",
+        "type" => "success"
+    ],
+    "user_not_exists" => [
+        "string" => "user does not exist",
+        "type" => "danger"
+    ],
+    "log_cleared" => [
+        "string" => "log cleared",
+        "type" => "success"
     ]
 ]);
