@@ -27,4 +27,24 @@ $('#usertable').DataTable({
     order: [
         [2, 'asc']
     ],
+    serverSide: true,
+    ajax: {
+        url: "lib/getusertable.php",
+        dataFilter: function (data) {
+            var json = jQuery.parseJSON(data);
+            json.data = [];
+            json.users.forEach(function (row) {
+                json.data.push([
+                    "",
+                    row.editbtn,
+                    row.realname,
+                    row.username,
+                    row.email,
+                    row.statuscode,
+                    row.typecode
+                ]);
+            });
+            return JSON.stringify(json);
+        }
+    }
 });

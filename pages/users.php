@@ -20,7 +20,7 @@ redirectifnotloggedin();
     </thead>
     <tbody>
         <?php
-        $users = $database->select('accounts', [
+        /*$users = $database->select('accounts', [
             "[>]acctstatus" => ['acctstatus' => 'statusid'],
             "[>]accttypes" => ['accttype' => 'typeid']
         ], [
@@ -47,7 +47,7 @@ redirectifnotloggedin();
                 <td><?php echo $u['typecode']; ?></td>
             </tr>
             <?php
-        }
+        }*/
         ?>
     </tbody>
     <tfoot>
