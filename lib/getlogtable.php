@@ -29,10 +29,10 @@ switch ($VARS['order'][0]['column']) {
     case 3:
         $order = ["username" => $sortby];
         break;
-    case 5:
+    case 4:
         $order = ["ip" => $sortby];
         break;
-    case 6:
+    case 5:
         $order = ["otherdata" => $sortby];
         break;
 }
