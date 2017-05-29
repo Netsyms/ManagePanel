@@ -71,5 +71,15 @@ define("STRINGS", [
     "relationship deleted" => "Relationship deleted.",
     "edit relationship" => "Edit Relationship",
     "adding relationship" => "Adding Relationship",
-    "relationship added" => "Relationship added."
+    "relationship added" => "Relationship added.",
+    "permissions" => "Permissions",
+    "permission" => "Permission",
+    "new permission" => "New Permission",
+    "delete permission" => "Delete Permission",
+    "adding permission" => "Adding Permission",
+    "user" => "User",
+    "permission does not exist" => "Permission does not exist.",
+    "really delete permission" => "Are you sure you want to revoke this permission?",
+    "permission added" => "Permission assigned.",
+    "permission deleted" => "Permission deleted."
 ]);

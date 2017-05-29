@@ -105,12 +105,39 @@ switch ($VARS['action']) {
         }
         $database->delete('managers', ['AND' => ['managerid' => $VARS['mid'], 'employeeid' => $VARS['eid']]]);
         returnToSender("relationship_deleted");
+    case "addpermission":
+        if (!$database->has('accounts', ['username' => $VARS['user']])) {
+            returnToSender("invalid_userid");
+        }
+        if (!$database->has('permissions', ['permcode' => $VARS['perm']])) {
+            returnToSender("permission_not_exists");
+        }
+        $uid = $database->select('accounts', 'uid', ['username' => $VARS['user']])[0];
+        $pid = $database->select('permissions', 'permid', ['permcode' => $VARS['perm']])[0];
+        $database->insert('assigned_permissions', ['uid' => $uid, 'permid' => $pid]);
+        returnToSender("permission_added");
+    case "delpermission":
+        if (!$database->has('accounts', ['uid' => $VARS['uid']])) {
+            returnToSender("invalid_userid");
+        }
+        if (!$database->has('permissions', ['permid' => $VARS['pid']])) {
+            returnToSender("permission_not_exists");
+        }
+        $database->delete('assigned_permissions', ['AND' => ['uid' => $VARS['uid'], 'permid' => $VARS['pid']]]);
+        returnToSender("permission_deleted");
     case "autocomplete_user":
         header("Content-Type: application/json");
         if (is_empty($VARS['q']) || strlen($VARS['q']) < 3) {
             exit(json_encode([]));
         }
         $data = $database->select('accounts', ['uid', 'username', 'realname (name)'], ["OR" => ['username[~]' => $VARS['q'], 'realname[~]' => $VARS['q']], "LIMIT" => 10]);
+        exit(json_encode($data));
+    case "autocomplete_permission":
+        header("Content-Type: application/json");
+        if (is_empty($VARS['q'])) {
+            exit(json_encode([]));
+        }
+        $data = $database->select('permissions', ['permcode (name)', 'perminfo (info)'], ["OR" => ['permcode[~]' => $VARS['q'], 'perminfo[~]' => $VARS['q']], "LIMIT" => 10]);
         exit(json_encode($data));
     case "signout":
         session_destroy();

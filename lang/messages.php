@@ -40,5 +40,17 @@ define("MESSAGES", [
     "relationship_deleted" => [
         "string" => "relationship deleted",
         "type" => "success"
-    ]
+    ],
+    "permission_not_exists" => [
+        "string" => "permission does not exist",
+        "type" => "danger"
+    ],
+    "permission_added" => [
+        "string" => "permission added",
+        "type" => "success"
+    ],
+    "permission_deleted" => [
+        "string" => "permission deleted",
+        "type" => "success"
+    ],
 ]);

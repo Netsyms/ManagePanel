@@ -76,6 +76,34 @@ define("PAGES", [
         "title" => "delete manager",
         "navbar" => false
     ],
+    "permissions" => [
+        "title" => "permissions",
+        "navbar" => true,
+        "icon" => "key",
+        "styles" => [
+            "static/css/datatables.min.css",
+            "static/css/tables.css"
+        ],
+        "scripts" => [
+            "static/js/datatables.min.js",
+            "static/js/permissions.js"
+        ],
+    ],
+    "addpermission" => [
+        "title" => "new permission",
+        "navbar" => false,
+        "styles" => [
+            "static/css/easy-autocomplete.min.css"
+        ],
+        "scripts" => [
+            "static/js/jquery.easy-autocomplete.min.js",
+            "static/js/addpermission.js"
+        ]
+    ],
+    "delpermission" => [
+        "title" => "delete permission",
+        "navbar" => false
+    ],
     "404" => [
         "title" => "404 error"
     ]
