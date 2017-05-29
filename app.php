@@ -121,7 +121,7 @@ if (!is_empty($_GET['page'])) {
             <?php
             if (MENU_BAR_STYLE == "fixed") {
                 ?>
-                <div style="height: 75px;"></div>
+                <div id="push-down-box"></div>
                 <?php
             }
             ?>

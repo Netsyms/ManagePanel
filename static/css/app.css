@@ -14,6 +14,17 @@
     text-align: center;
 }
 
+#push-down-box {
+    height: 75px;
+}
+
+/* Make sure all the content is visible when the navbar wraps to two lines */
+@media (min-width: 768px) and (max-width: 879px) {
+    #push-down-box {
+        height: 140px;
+    }
+}
+
 /*
 ==============================
             THEMING
