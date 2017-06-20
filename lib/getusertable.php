@@ -30,9 +30,12 @@ switch ($VARS['order'][0]['column']) {
         $order = ["email" => $sortby];
         break;
     case 5:
-        $order = ["statuscode" => $sortby];
+        $order = ["authsecret" => $sortby];
         break;
     case 6:
+        $order = ["statuscode" => $sortby];
+        break;
+    case 7:
         $order = ["typecode" => $sortby];
         break;
 }
@@ -67,6 +70,7 @@ $users = $database->select('accounts', [
     'username',
     'realname',
     'email',
+    'authsecret (2fa)',
     'acctstatus',
     'statuscode',
     'accttype',
@@ -85,6 +89,7 @@ if ($filter) {
 }
 $out['recordsFiltered'] = $recordsFiltered;
 for ($i = 0; $i < count($users); $i++) {
+    $users[$i]["2fa"] = (is_empty($users[$i]["2fa"]) ? false : true);
     $users[$i]["editbtn"] = '<a class="btn btn-blue btn-xs" href="app.php?page=edituser&id=' . $users[$i]['uid'] . '"><i class="fa fa-pencil-square-o"></i> ' . lang("edit", false) . '</a>';
 }
 $out['users'] = $users;

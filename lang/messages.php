@@ -53,4 +53,8 @@ define("MESSAGES", [
         "string" => "permission deleted",
         "type" => "success"
     ],
+    "2fa_removed" => [
+        "string" => "2fa removed",
+        "type" => "success"
+    ]
 ]);

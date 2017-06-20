@@ -40,6 +40,7 @@ $('#usertable').DataTable({
                     row.realname,
                     row.username,
                     row.email,
+                    (row['2fa'] == true ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>"),
                     row.statuscode,
                     row.typecode
                 ]);

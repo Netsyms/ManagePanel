@@ -80,6 +80,14 @@ switch ($VARS['action']) {
         $database->delete('accounts', ['uid' => $VARS['id']]);
         insertAuthLog(16, $_SESSION['uid'], $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus']);
         returnToSender("user_deleted");
+    case "rmtotp":
+        if ($database->has('accounts', ['uid' => $VARS['id']]) !== TRUE) {
+            returnToSender("invalid_userid");
+        }
+        $u = $database->get('accounts', 'username', ['uid' => $VARS['id']]);
+        $database->update('accounts', ["authsecret" => null], ['uid' => $VARS['id']]);
+        insertAuthLog(10, $_SESSION['uid'], $u);
+        returnToSender("2fa_removed");
     case "clearlog":
         $rows = $database->count('authlog');
         $database->delete('authlog');

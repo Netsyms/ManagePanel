@@ -81,5 +81,9 @@ define("STRINGS", [
     "permission does not exist" => "Permission does not exist.",
     "really delete permission" => "Are you sure you want to revoke this permission?",
     "permission added" => "Permission assigned.",
-    "permission deleted" => "Permission deleted."
+    "permission deleted" => "Permission deleted.",
+    "remove 2fa" => "Reset 2FA",
+    "action performed by" => "Action performed by {user}",
+    "2fa removed" => "2-factor authentication removed.",
+    "2fa" => "2FA"
 ]);

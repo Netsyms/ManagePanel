@@ -10,6 +10,7 @@ $userdata = [
     'username' => '',
     'realname' => '',
     'email' => '',
+    'authsecret' => '',
     'acctstatus' => '',
     'typecode' => 'LOCAL'
 ];
@@ -24,6 +25,7 @@ if (!is_empty($VARS['id'])) {
                     'username',
                     'realname',
                     'email',
+                    'authsecret',
                     'acctstatus',
                     'typecode'
                         ], [
@@ -126,9 +128,16 @@ if ($userdata['typecode'] != "LOCAL") {
             <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i> <?php lang("save"); ?></button>
             <?php
             if ($editing) {
+                echo "<span class=\"pull-right\">";
+                if (!is_empty($userdata['authsecret'])) {
+                    ?>
+                    <a href="action.php?action=rmtotp&source=users&id=<?php echo htmlspecialchars($VARS['id']); ?>" style="margin-top: 8px;" class="btn btn-warning btn-xs"><i class="fa fa-unlock"></i> <?php lang('remove 2fa'); ?></a> &nbsp; &nbsp;
+                    <?php
+                }
                 ?>
-                <a href="app.php?page=deluser&id=<?php echo htmlspecialchars($VARS['id']); ?>" style="margin-top: 8px;" class="btn btn-danger btn-xs pull-right"><i class="fa fa-times"></i> <?php lang('delete'); ?></a>
+                <a href="app.php?page=deluser&id=<?php echo htmlspecialchars($VARS['id']); ?>" style="margin-top: 8px;" class="btn btn-danger btn-xs"><i class="fa fa-times"></i> <?php lang('delete'); ?></a>
                 <?php
+                echo "</span>";
             }
             ?>
         </div>
