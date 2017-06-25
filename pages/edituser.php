@@ -12,7 +12,8 @@ $userdata = [
     'email' => '',
     'authsecret' => '',
     'acctstatus' => '',
-    'typecode' => 'LOCAL'
+    'typecode' => 'LOCAL',
+    'deleted' => 0
 ];
 
 $editing = false;
@@ -27,7 +28,8 @@ if (!is_empty($VARS['id'])) {
                     'email',
                     'authsecret',
                     'acctstatus',
-                    'typecode'
+                    'typecode',
+                    'deleted'
                         ], [
                     'uid' => $VARS['id']
                 ])[0];
@@ -70,6 +72,13 @@ if ($userdata['typecode'] != "LOCAL") {
                 </div>
                 <?php
             }
+            if ($userdata['deleted'] == 1) {
+                ?>
+                <div class="alert alert-info">
+                    <?php lang("editing deleted account"); ?>
+                </div>
+                <?php
+            }
             ?>
             <div class="form-group">
                 <label for="name"><i class="fa fa-user"></i> <?php lang("name"); ?></label>
@@ -80,7 +89,7 @@ if ($userdata['typecode'] != "LOCAL") {
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
                         <label for="username"><i class="fa fa-id-badge"></i> <?php lang("username"); ?></label>
-                        <input type="text" <?php if (!$localacct) echo "disabled"; ?> class="form-control" name="username" id="username" placeholder="<?php lang("placeholder username"); ?>" required="required" value="<?php echo htmlspecialchars($userdata['username']); ?>" />
+                        <input type="text" <?php if (!$localacct) echo "readonly=\"readonly\""; ?> class="form-control" name="username" id="username" placeholder="<?php lang("placeholder username"); ?>" required="required" value="<?php echo htmlspecialchars($userdata['username']); ?>" />
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6">
@@ -95,7 +104,7 @@ if ($userdata['typecode'] != "LOCAL") {
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
                         <label for="pass"><i class="fa fa-lock"></i> <?php lang("new password"); ?></label>
-                        <input type="text" <?php if (!$localacct) echo "disabled"; ?> autocomplete="new-password" class="form-control" name="pass" id="pass" placeholder="<?php lang("placeholder password"); ?>" />
+                        <input type="text" <?php if (!$localacct) echo "readonly=\"readonly\""; ?> autocomplete="new-password" class="form-control" name="pass" id="pass" placeholder="<?php lang("placeholder password"); ?>" />
                     </div>
                 </div>
 

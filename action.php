@@ -52,7 +52,8 @@ switch ($VARS['action']) {
             'realname' => $VARS['name'],
             'username' => $VARS['username'],
             'email' => $VARS['email'],
-            'acctstatus' => $VARS['status']
+            'acctstatus' => $VARS['status'],
+            'deleted' => 0
         ];
 
         if (!is_empty($VARS['pass'])) {
@@ -78,6 +79,11 @@ switch ($VARS['action']) {
         }
         $olddata = $database->select('accounts', '*', ['uid' => $VARS['id']])[0];
         $database->delete('accounts', ['uid' => $VARS['id']]);
+        if (!is_null($database->error()[1])) {
+            // If we can't delete the account (because it's referenced elsewhere),
+            // we will flag it as deleted and set the status to LOCKED_OR_DISABLED.
+            $database->update('accounts', ['acctstatus' => 2, 'deleted' => 1], ['uid' => $VARS['id']]);
+        }
         insertAuthLog(16, $_SESSION['uid'], $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus']);
         returnToSender("user_deleted");
     case "rmtotp":

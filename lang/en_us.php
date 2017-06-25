@@ -85,5 +85,7 @@ define("STRINGS", [
     "remove 2fa" => "Reset 2FA",
     "action performed by" => "Action performed by {user}",
     "2fa removed" => "2-factor authentication removed.",
-    "2fa" => "2FA"
+    "2fa" => "2FA",
+    "show deleted" => "Show deleted",
+    "editing deleted account" => "You are editing an account marked as deleted.  The account will be undeleted if you press Save."
 ]);

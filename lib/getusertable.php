@@ -6,11 +6,20 @@ dieifnotloggedin();
 
 header("Content-Type: application/json");
 
+$show_deleted = false;
+if ($VARS['show_deleted'] == 1) {
+    $show_deleted = true;
+}
+
 $out = [];
 
 $out['draw'] = intval($VARS['draw']);
 
-$out['recordsTotal'] = $database->count('accounts');
+if ($show_deleted) {
+    $out['recordsTotal'] = $database->count('accounts');
+} else {
+    $out['recordsTotal'] = $database->count('accounts', ['deleted' => 0]);
+}
 $filter = false;
 
 // sort
@@ -43,19 +52,37 @@ switch ($VARS['order'][0]['column']) {
 // search
 if (!is_empty($VARS['search']['value'])) {
     $filter = true;
-    $wherenolimit = [
-        "OR" => [
-            "username[~]" => $VARS['search']['value'],
-            "realname[~]" => $VARS['search']['value'],
-            "email[~]" => $VARS['search']['value'],
-            "statuscode[~]" => $VARS['search']['value'],
-            "typecode[~]" => $VARS['search']['value']
-        ]
-    ];
+    if ($show_deleted) {
+        $wherenolimit = [
+            "OR" => [
+                "username[~]" => $VARS['search']['value'],
+                "realname[~]" => $VARS['search']['value'],
+                "email[~]" => $VARS['search']['value'],
+                "statuscode[~]" => $VARS['search']['value'],
+                "typecode[~]" => $VARS['search']['value']
+            ]
+        ];
+    } else {
+        $wherenolimit = [
+            "AND" => [
+                "OR" => [
+                    "username[~]" => $VARS['search']['value'],
+                    "realname[~]" => $VARS['search']['value'],
+                    "email[~]" => $VARS['search']['value'],
+                    "statuscode[~]" => $VARS['search']['value'],
+                    "typecode[~]" => $VARS['search']['value']
+                ],
+                "deleted" => 0
+            ]
+        ];
+    }
     $where = $wherenolimit;
     $where["LIMIT"] = [$VARS['start'], $VARS['length']];
 } else {
     $where = ["LIMIT" => [$VARS['start'], $VARS['length']]];
+    if (!$show_deleted) {
+        $where["deleted"] = 0;
+    }
 }
 if (!is_null($order)) {
     $where["ORDER"] = $order;
@@ -74,7 +101,8 @@ $users = $database->select('accounts', [
     'acctstatus',
     'statuscode',
     'accttype',
-    'typecode'
+    'typecode',
+    'deleted'
         ], $where);
 
 
