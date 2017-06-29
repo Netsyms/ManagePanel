@@ -38,6 +38,31 @@ function mobile_enabled() {
     }
 }
 
+function mobile_valid($username, $code) {
+    $client = new GuzzleHttp\Client();
+
+    $response = $client
+            ->request('POST', PORTAL_API, [
+        'form_params' => [
+            'key' => PORTAL_KEY,
+            "code" => $code,
+            "username" => $username,
+            'action' => "mobilevalid"
+        ]
+    ]);
+
+    if ($response->getStatusCode() > 299) {
+        return false;
+    }
+
+    $resp = json_decode($response->getBody(), TRUE);
+    if ($resp['status'] == "OK" && $resp['valid'] === TRUE) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 if (mobile_enabled() !== TRUE) {
     exit(json_encode(["status" => "ERROR", "msg" => lang("mobile login disabled", false)]));
 }
@@ -49,11 +74,9 @@ if (is_empty($VARS['username']) || is_empty($VARS['key'])) {
 }
 
 // Make sure the username and key are actually legit
-$user_key_valid = $database->has('mobile_codes', ['[>]accounts' => ['uid' => 'uid']], ["AND" => ['mobile_codes.code' => $VARS['key'], 'accounts.username' => $VARS['username']]]);
-if ($user_key_valid !== TRUE) {
+if (!mobile_valid($VARS['username'], $VARS['key'])) {
     engageRateLimit();
     http_response_code(401);
-    insertAuthLog(21, null, "Username: " . $VARS['username'] . ", Key: " . $VARS['key']);
     die(json_encode(["status" => "ERROR", "msg" => "Invalid username and/or access key."]));
 }
 
@@ -64,8 +87,12 @@ switch ($VARS['action']) {
         if (user_exists($VARS['username'])) {
             if (get_account_status($VARS['username']) == "NORMAL") {
                 if (authenticate_user($VARS['username'], $VARS['password'], $autherror)) {
-                    doLoginUser($VARS['username'], $VARS['password']);
-                    exit(json_encode(["status" => "OK"]));
+                    if (account_has_permission($VARS['username'], "ADMIN")) {
+                        doLoginUser($VARS['username'], $VARS['password']);
+                        exit(json_encode(["status" => "OK"]));
+                    } else {
+                        exit(json_encode(["status" => "ERROR", "msg" => lang("no admin permission", false)]));
+                    }
                 }
             }
         }
