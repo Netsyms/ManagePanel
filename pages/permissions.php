@@ -11,8 +11,8 @@ redirectifnotloggedin();
         <tr>
             <th data-priority="0"></th>
             <th data-priority="1"><?php lang('actions'); ?></th>
-            <th data-priority="1"><i class="fa fa-fw fa-user"></i> <?php lang('user'); ?></th>
-            <th data-priority="1"><i class="fa fa-fw fa-key"></i> <?php lang('permission'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-user hidden-xs"></i> <?php lang('user'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-key hidden-xs"></i> <?php lang('permission'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@ redirectifnotloggedin();
         <tr>
             <th data-priority="0"></th>
             <th data-priority="1"><?php lang('actions'); ?></th>
-            <th data-priority="1"><i class="fa fa-fw fa-user"></i> <?php lang('user'); ?></th>
-            <th data-priority="1"><i class="fa fa-fw fa-key"></i> <?php lang('permission'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-user hidden-xs"></i> <?php lang('user'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-key hidden-xs"></i> <?php lang('permission'); ?></th>
     </tfoot>
 </table>

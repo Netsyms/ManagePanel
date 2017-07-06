@@ -11,8 +11,8 @@ redirectifnotloggedin();
         <tr>
             <th data-priority="0"></th>
             <th data-priority="1"><?php lang('actions'); ?></th>
-            <th data-priority="1"><i class="fa fa-fw fa-id-card-o"></i> <?php lang('manager'); ?></th>
-            <th data-priority="1"><i class="fa fa-fw fa-user"></i> <?php lang('employee'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-id-card-o hidden-xs"></i> <?php lang('manager'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-user hidden-xs"></i> <?php lang('employee'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -46,7 +46,7 @@ redirectifnotloggedin();
         <tr>
             <th data-priority="0"></th>
             <th data-priority="1"><?php lang('actions'); ?></th>
-            <th data-priority="1"><i class="fa fa-fw fa-id-card-o"></i> <?php lang('manager'); ?></th>
-            <th data-priority="1"><i class="fa fa-fw fa-user"></i> <?php lang('employee'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-id-card-o hidden-xs"></i> <?php lang('manager'); ?></th>
+            <th data-priority="1"><i class="fa fa-fw fa-user hidden-xs"></i> <?php lang('employee'); ?></th>
     </tfoot>
 </table>
