@@ -7,7 +7,9 @@ require_once __DIR__ . "/required.php";
 require_once __DIR__ . "/lib/login.php";
 require_once __DIR__ . "/lib/authlog.php";
 
-dieifnotloggedin();
+if ($VARS['action'] !== "signout") {
+    dieifnotloggedin();
+}
 
 if (account_has_permission($_SESSION['username'], "ADMIN") == FALSE) {
     die("You don't have permission to be here.");
