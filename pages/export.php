@@ -25,8 +25,6 @@ redirectifnotloggedin();
         </div>
     </div>
     <br />
-    <input type="hidden" name="action" value="export" />
-    <input type="hidden" name="source" value="export" />
     <?php
     $code = uniqid(rand(10000000,99999999), true);
     $database2->insert('report_access_codes', ['code' => $code, 'expires' => date("Y-m-d H:i:s", strtotime("+5 minutes"))]);
