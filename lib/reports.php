@@ -19,17 +19,18 @@ use odsPhpGenerator\odsTableCellString;
 use odsPhpGenerator\odsStyleTableColumn;
 use odsPhpGenerator\odsStyleTableCell;
 
-// Allow access with a one-time code, for mobile app and stuff
+// Allow access with a download code, for mobile app and stuff
+$date = date("Y-m-d H:i:s");
 if (isset($VARS['code']) && LOADED) {
-    $date = date("Y-m-d H:i:s");
-    if ($database2->has('report_access_codes', ["AND" => ['code' => $VARS['code'], 'expires[>]' => $date]])) {
-        $database2->delete('report_access_codes', ["OR" => ['code' => $VARS['code'], 'expires[<=]' => $date]]);
-    } else {
+    if (!$database2->has('report_access_codes', ["AND" => ['code' => $VARS['code'], 'expires[>]' => $date]])) {
         dieifnotloggedin();
     }
 } else {
     dieifnotloggedin();
 }
+
+// Delete old DB entries
+$database2->delete('report_access_codes', ['expires[<=]' => $date]);
 
 if (LOADED) {
     if (isset($VARS['type']) && isset($VARS['format'])) {
