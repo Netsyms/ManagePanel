@@ -88,6 +88,11 @@ define("PAGES", [
         "title" => "delete permission",
         "navbar" => false
     ],
+    "export" => [
+        "title" => "report export",
+        "navbar" => true,
+        "icon" => "download"
+    ],
     "404" => [
         "title" => "404 error"
     ]

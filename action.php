@@ -183,6 +183,10 @@ switch ($VARS['action']) {
         }
         $data = $database->select('permissions', ['permcode (name)', 'perminfo (info)'], ["OR" => ['permcode[~]' => $VARS['q'], 'perminfo[~]' => $VARS['q']], "LIMIT" => 10]);
         exit(json_encode($data));
+    case "export":
+        require_once __DIR__ . "/lib/reports.php";
+        generateReport($VARS['type'], $VARS['format']);
+        break;
     case "signout":
         session_destroy();
         header('Location: index.php');

@@ -93,5 +93,18 @@ define("STRINGS", [
     "type to add a person" => "Type to add a person",
     "employees" => "Employees",
     "type to select a manager" => "Type to select a manager",
-    "select a manager to view or edit employees" => "Select a manager to view or edit the assigned employees."
+    "select a manager to view or edit employees" => "Select a manager to view or edit the assigned employees.",
+    "report export" => "Reports/Export",
+    "report type" => "Report type",
+    "format" => "Format",
+    "generate report" => "Generate report",
+    "choose an option" => "Choose an option",
+    "csv file" => "CSV text file",
+    "ods file" => "ODS spreadsheet",
+    "uid" => "User ID",
+    "manager name" => "Manager",
+    "manager username" => "Mgr. Username",
+    "employee name" => "Employee", 
+    "employee username" => "Emp. Username",
+    "permission id" => "Perm. ID"
 ]);
