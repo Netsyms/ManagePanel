@@ -1,47 +1,104 @@
-$('#managertable').DataTable({
-    responsive: {
-        details: {
-            display: $.fn.dataTable.Responsive.display.modal({
-                header: function (row) {
-                    var data = row.data();
-                    return "<i class=\"fa fa-id-card-o fa-fw\"></i> " + data[2];
-                }
-            }),
-            renderer: $.fn.dataTable.Responsive.renderer.tableAll({
-                tableClass: 'table'
-            }),
-            type: "column"
+var empoptions = {
+    url: "action.php",
+    ajaxSettings: {
+        dataType: "json",
+        method: "GET",
+        data: {
+            action: "autocomplete_user"
         }
     },
-    columnDefs: [
-        {
-            targets: 0,
-            className: 'control',
-            orderable: false
-        },
-        {
-            targets: 1,
-            orderable: false
+    preparePostData: function (data) {
+        data.q = $("#people-box").val();
+        return data;
+    },
+    getValue: function (element) {
+        return element.username;
+    },
+    template: {
+        type: "custom",
+        method: function (value, item) {
+            return item.name + " <i class=\"small\">" + item.username + "</i>";
         }
-    ],
-    order: [
-        [2, 'asc']
-    ],
-    serverSide: true,
-    ajax: {
-        url: "lib/getmanagetable.php",
-        dataFilter: function (data) {
-            var json = jQuery.parseJSON(data);
-            json.data = [];
-            json.managers.forEach(function (row) {
-                json.data.push([
-                    "",
-                    row.delbtn,
-                    row.managername + " (" + row.manageruser + ")",
-                    row.employeename + " (" + row.employeeuser + ")"
-                ]);
-            });
-            return JSON.stringify(json);
+    },
+    list: {
+        onClickEvent: function () {
+            var value = $("#people-box").getSelectedItemData().username;
+            addPerson(value);
         }
     }
+};
+
+$("#people-box").easyAutocomplete(empoptions);
+
+var manoptions = {
+    url: "action.php",
+    ajaxSettings: {
+        dataType: "json",
+        method: "GET",
+        data: {
+            action: "autocomplete_user"
+        }
+    },
+    preparePostData: function (data) {
+        data.q = $("#manager-box").val();
+        return data;
+    },
+    getValue: function (element) {
+        return element.username;
+    },
+    template: {
+        type: "custom",
+        method: function (value, item) {
+            return item.name + " <i class=\"small\">" + item.username + "</i>";
+        }
+    },
+    list: {
+        onClickEvent: function () {
+            var value = $("#manager-box").getSelectedItemData().username;
+            document.location.href = "app.php?page=managers&man=" + value;
+        }
+    }
+};
+
+$("#manager-box").easyAutocomplete(manoptions);
+
+$("#people-box").keyup(function (event) {
+    if (event.keyCode == 13) {
+        $("#addpersonbtn").click();
+        event.preventDefault();
+        return false;
+    }
 });
+$("#people-box").keydown(function (event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        return false;
+    }
+});
+
+$("#addpersonbtn").click(function () {
+    addPerson($("#people-box").val());
+});
+
+function addPerson(p) {
+    p = String.trim(p);
+    if (p == "") {
+        return false;
+    }
+    if ($("#peoplelist div[data-user=" + p + "]").length) {
+        $("#peoplelist .list-group-item[data-user=" + p + "]").animate({
+            backgroundColor: "#ff0000",
+        }, 500, "linear", function () {
+            $("#peoplelist .list-group-item[data-user=" + p + "]").animate({
+                backgroundColor: "#ffffff",
+            }, 500);
+        });
+        return false;
+    }
+    $('#peoplelist').append("<div class=\"list-group-item\" data-user=\"" + p + "\">" + p + "<div onclick=\"removePerson('" + p + "')\" class=\"btn btn-danger btn-sm pull-right\"><i class=\"fa fa-trash-o\"></i></div><input type=\"hidden\" name=\"employees[]\" value=\"" + p + "\" /></div>");
+    $("#people-box").val("");
+}
+
+function removePerson(p) {
+    $("#peoplelist div[data-user=" + p + "]").remove();
+}

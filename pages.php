@@ -53,28 +53,12 @@ define("PAGES", [
         "navbar" => true,
         "icon" => "id-card-o",
         "styles" => [
-            "static/css/datatables.min.css",
-            "static/css/tables.css"
-        ],
-        "scripts" => [
-            "static/js/datatables.min.js",
-            "static/js/managers.js"
-        ],
-    ],
-    "addmanager" => [
-        "title" => "new relationship",
-        "navbar" => false,
-        "styles" => [
             "static/css/easy-autocomplete.min.css"
         ],
         "scripts" => [
             "static/js/jquery.easy-autocomplete.min.js",
-            "static/js/addmanager.js"
+            "static/js/managers.js"
         ]
-    ],
-    "delmanager" => [
-        "title" => "delete manager",
-        "navbar" => false
     ],
     "permissions" => [
         "title" => "permissions",

@@ -56,5 +56,13 @@ define("MESSAGES", [
     "2fa_removed" => [
         "string" => "2fa removed",
         "type" => "success"
-    ]
+    ],
+    "manager_assigned" => [
+        "string" => "manager assigned",
+        "type" => "success"
+    ],
+    "invalid_manager" => [
+        "string" => "manager does not exist",
+        "type" => "danger"
+    ],
 ]);

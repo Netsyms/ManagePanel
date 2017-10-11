@@ -20,13 +20,20 @@ if (account_has_permission($_SESSION['username'], "ADMIN") == FALSE) {
  * The message will be displayed by the app.
  * @param string $msg message ID (see lang/messages.php)
  * @param string $arg If set, replaces "{arg}" in the message string when displayed to the user.
+ * @param [key=>val] $additional Put the given key-value array in the URL
  */
-function returnToSender($msg, $arg = "") {
+function returnToSender($msg, $arg = "", $additional = []) {
     global $VARS;
+    $add = "";
+    if ($additional != []) {
+        foreach ($additional as $key => $val) {
+            $add .= "&" . urlencode($key) . "=" . urlencode($val);
+        }
+    }
     if ($arg == "") {
-        header("Location: app.php?page=" . urlencode($VARS['source']) . "&msg=" . $msg);
+        header("Location: app.php?page=" . urlencode($VARS['source']) . $add . "&msg=" . $msg);
     } else {
-        header("Location: app.php?page=" . urlencode($VARS['source']) . "&msg=$msg&arg=$arg");
+        header("Location: app.php?page=" . urlencode($VARS['source']) . $add . "&msg=$msg&arg=$arg");
     }
     die();
 }
@@ -101,6 +108,27 @@ switch ($VARS['action']) {
         $database->delete('authlog');
         insertAuthLog(15, $_SESSION['uid'], lang2("removed n entries", ['n' => $rows], false));
         returnToSender("log_cleared");
+    case "editmanager":
+        require_once __DIR__ . "/lib/userinfo.php";
+        if (!$database->has('accounts', ['username' => $VARS['manager']])) {
+            returnToSender("invalid_manager");
+        }
+        $manager = getUserByUsername($VARS['manager'])['uid'];
+        $already_assigned = $database->select('managers', 'employeeid', ['managerid' => $manager]);
+        
+        foreach ($VARS['employees'] as $u) {
+            if (!user_exists($u)) {
+                returnToSender("user_not_exists", htmlentities($u));
+            }
+            $uid = getUserByUsername($u)['uid'];
+            $database->insert('managers', ['employeeid' => $uid, 'managerid' => $manager]);
+            $already_assigned = array_diff($already_assigned, [$uid]); // Remove user from old list
+        }
+        foreach ($already_assigned as $uid) {
+            $database->delete('managers', ["AND" => ['employeeid' => $uid, 'managerid' => $manager]]);
+        }
+        returnToSender("manager_assigned", "", ["man" => $VARS['manager']]);
+        break;
     case "addmanager":
         if (!$database->has('accounts', ['username' => $VARS['manager']])) {
             returnToSender("invalid_userid");

@@ -87,5 +87,11 @@ define("STRINGS", [
     "2fa removed" => "2-factor authentication removed.",
     "2fa" => "2FA",
     "show deleted" => "Show deleted",
-    "editing deleted account" => "You are editing an account marked as deleted.  The account will be undeleted if you press Save."
+    "editing deleted account" => "You are editing an account marked as deleted.  The account will be undeleted if you press Save.",
+    "manager assigned" => "Manager relationships saved.",
+    "manager does not exist" => "The selected manager username does not exist.",
+    "type to add a person" => "Type to add a person",
+    "employees" => "Employees",
+    "type to select a manager" => "Type to select a manager",
+    "select a manager to view or edit employees" => "Select a manager to view or edit the assigned employees."
 ]);
