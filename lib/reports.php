@@ -208,6 +208,14 @@ function dataToODS($data, $name = "report") {
 }
 
 function dataToHTML($data, $name = "report") {
+    // HTML exporter doesn't like null values
+    for ($i = 0; $i < count($data); $i++) {
+        for ($j = 0; $j < count($data[$i]); $j++) {
+            if (is_null($data[$i][$j])) {
+                $data[$i][$j] = '';
+            }
+        }
+    }
     header('Content-type: text/html');
     $converter = new HTMLConverter();
     $out = "<!DOCTYPE html>\n"
