@@ -4,7 +4,7 @@
 // DO NOT SET TO TRUE IN PRODUCTION!!!
 define("DEBUG", false);
 
-// Portal database connection settings
+// AccountHub database connection settings
 // See http://medoo.in/api/new for info
 define("DB_TYPE", "mysql");
 define("DB_NAME", "sso");
@@ -12,6 +12,14 @@ define("DB_SERVER", "localhost");
 define("DB_USER", "sso");
 define("DB_PASS", "");
 define("DB_CHARSET", "utf8");
+
+// ManagePanel DB connection
+define("DB2_TYPE", "mysql");
+define("DB2_NAME", "managepanel");
+define("DB2_SERVER", "localhost");
+define("DB2_USER", "managepanel");
+define("DB2_PASS", "");
+define("DB2_CHARSET", "utf8");
 
 // Name of the app.
 define("SITE_TITLE", "ManagePanel");

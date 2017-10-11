@@ -101,6 +101,7 @@ define("STRINGS", [
     "choose an option" => "Choose an option",
     "csv file" => "CSV text file",
     "ods file" => "ODS spreadsheet",
+    "html file" => "HTML web page",
     "uid" => "User ID",
     "manager name" => "Manager",
     "manager username" => "Mgr. Username",

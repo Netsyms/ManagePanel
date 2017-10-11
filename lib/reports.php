@@ -1,8 +1,16 @@
 <?php
 
+// Detect if loaded by the user or by PHP
+if (count(get_included_files()) == 1) {
+    define("LOADED", true);
+} else {
+    define("LOADED", false);
+}
+
 require_once __DIR__ . "/../required.php";
 
 use League\Csv\Writer;
+use League\Csv\HTMLConverter;
 use odsPhpGenerator\ods;
 use odsPhpGenerator\odsTable;
 use odsPhpGenerator\odsTableRow;
@@ -11,7 +19,27 @@ use odsPhpGenerator\odsTableCellString;
 use odsPhpGenerator\odsStyleTableColumn;
 use odsPhpGenerator\odsStyleTableCell;
 
-dieifnotloggedin();
+// Allow access with a one-time code, for mobile app and stuff
+if (isset($VARS['code']) && LOADED) {
+    $date = date("Y-m-d H:i:s");
+    if ($database2->has('report_access_codes', ["AND" => ['code' => $VARS['code'], 'expires[>]' => $date]])) {
+        $database2->delete('report_access_codes', ["OR" => ['code' => $VARS['code'], 'expires[<=]' => $date]]);
+    } else {
+        dieifnotloggedin();
+    }
+} else {
+    dieifnotloggedin();
+}
+
+if (LOADED) {
+    if (isset($VARS['type']) && isset($VARS['format'])) {
+        generateReport($VARS['type'], $VARS['format']);
+        die();
+    } else {
+        lang("invalid parameters");
+        die();
+    }
+}
 
 function getUserReport() {
     global $database;
@@ -144,7 +172,7 @@ function dataToCSV($data, $name = "report") {
     $csv = Writer::createFromString('');
     $csv->insertAll($data);
     header('Content-type: text/csv');
-    header('Content-Disposition: attachment; filename="' . $name . "_" . date("Y-m-d_Hm") . ".csv" . '"');
+    header('Content-Disposition: attachment; filename="' . $name . "_" . date("Y-m-d_Hi") . ".csv" . '"');
     echo $csv;
     die();
 }
@@ -175,7 +203,31 @@ function dataToODS($data, $name = "report") {
         $rowid++;
     }
     $ods->addTable($table);
-    $ods->downloadOdsFile($name . "_" . date("Y-m-d_Hm") . ".ods");
+    $ods->downloadOdsFile($name . "_" . date("Y-m-d_Hi") . ".ods");
+}
+
+function dataToHTML($data, $name = "report") {
+    header('Content-type: text/html');
+    $converter = new HTMLConverter();
+    $out = "<!DOCTYPE html>\n"
+            . "<meta charset=\"utf-8\">\n"
+            . "<meta name=\"viewport\" content=\"width=device-width\">\n"
+            . "<title>" . $name . "_" . date("Y-m-d_Hi") . "</title>\n"
+            . <<<STYLE
+<style>
+    .table-csv-data {
+        border-collapse: collapse;
+    }
+    .table-csv-data tr:first-child {
+        font-weight: bold;
+    }
+    .table-csv-data tr td {
+        border: 1px solid black;
+    }
+</style>
+STYLE
+            . $converter->convert($data);
+    echo $out;
 }
 
 function generateReport($type, $format) {
@@ -183,6 +235,9 @@ function generateReport($type, $format) {
     switch ($format) {
         case "ods":
             dataToODS($data, $type);
+            break;
+        case "html":
+            dataToHTML($data, $type);
             break;
         case "csv":
         default:

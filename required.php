@@ -53,9 +53,23 @@ try {
     ]);
 } catch (Exception $ex) {
     //header('HTTP/1.1 500 Internal Server Error');
-    sendError("Database error.  Try again later.  $ex");
+    sendError("Database error 1.  Try again later.  $ex");
 }
 
+$database2;
+try {
+    $database2 = new Medoo([
+        'database_type' => DB2_TYPE,
+        'database_name' => DB2_NAME,
+        'server' => DB2_SERVER,
+        'username' => DB2_USER,
+        'password' => DB2_PASS,
+        'charset' => DB2_CHARSET
+    ]);
+} catch (Exception $ex) {
+    //header('HTTP/1.1 500 Internal Server Error');
+    sendError("Database error 2.  Try again later.  $ex");
+}
 
 if (!DEBUG) {
     error_reporting(0);
