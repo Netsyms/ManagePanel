@@ -105,7 +105,7 @@ switch ($VARS['action']) {
         returnToSender("2fa_removed");
     case "clearlog":
         $rows = $database->count('authlog');
-        $database->delete('authlog');
+        $database->delete('authlog', []);
         insertAuthLog(15, $_SESSION['uid'], lang2("removed n entries", ['n' => $rows], false));
         returnToSender("log_cleared");
     case "editmanager":
