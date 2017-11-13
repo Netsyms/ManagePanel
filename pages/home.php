@@ -11,7 +11,7 @@ redirectifnotloggedin();
                 <h1><i class="fa fa-fw fa-users"></i> <?php echo $database->count('accounts'); ?></h1>
             </div>
             <div class="panel-footer">
-                <a style="color: black;" href="app.php?page=users"><i class="fa fa-arrow-right fa-fw"></i> <?php lang('view users'); ?></a>
+                <a href="app.php?page=users" class="black-text"><i class="fa fa-arrow-right fa-fw"></i> <?php lang('view users'); ?></a>
             </div>
         </div>
     </div>
@@ -22,7 +22,7 @@ redirectifnotloggedin();
                 <h1><i class="fa fa-fw fa-user-times"></i> <?php echo $database->count('accounts', ['OR' => ['acctstatus #LOCKED_OR_DISABLED' => 2, 'acctstatus #CHANGE_PASSWORD' => 3]]); ?></h1>
             </div>
             <div class="panel-footer">
-                <a style="color: black;" href="app.php?page=users"><i class="fa fa-arrow-right fa-fw"></i> <?php lang('view users'); ?></a>
+                <a href="app.php?page=users" class="black-text"><i class="fa fa-arrow-right fa-fw"></i> <?php lang('view users'); ?></a>
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@ redirectifnotloggedin();
                 <h1><i class="fa fa-fw fa-list"></i> <?php echo $database->count('authlog'); ?></h1>
             </div>
             <div class="panel-footer">
-                <a style="color: black;" href="app.php?page=authlog"><i class="fa fa-arrow-right fa-fw"></i> <?php lang('view security log'); ?></a>
+                <a href="app.php?page=authlog" class="black-text"><i class="fa fa-arrow-right fa-fw"></i> <?php lang('view security log'); ?></a>
             </div>
         </div>
     </div>

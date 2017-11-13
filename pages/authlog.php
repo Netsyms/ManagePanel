@@ -3,7 +3,7 @@ require_once __DIR__ . '/../required.php';
 
 redirectifnotloggedin();
 ?>
-<div class="btn-group" style="margin-bottom: 10px;">
+<div class="btn-group mgn-btm-10px">
     <a href="app.php?page=clearlog" class="btn btn-warning"><i class="fa fa-times"></i> <?php lang("clear log"); ?></a>
 </div>
 <table id="logtable" class="table table-bordered table-striped">

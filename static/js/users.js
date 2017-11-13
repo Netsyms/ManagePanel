@@ -55,4 +55,8 @@ var usertable = $('#usertable').DataTable({
     }
 });
 
-$('#usertable_filter').append("<div class=\"checkbox\" style=\"display: inline-block\"><label><input type=\"checkbox\" id=\"show_deleted_checkbox\" onclick=\"usertable.ajax.reload()\"> " + lang_show_deleted + "</label></div>");
+$('#usertable_filter').append("<div class=\"checkbox inblock\"><label><input type=\"checkbox\" id=\"show_deleted_checkbox\"> " + lang_show_deleted + "</label></div>");
+
+$('#show_deleted_checkbox').click(function () {
+    usertable.ajax.reload();
+});

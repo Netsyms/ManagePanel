@@ -95,10 +95,14 @@ function addPerson(p) {
         });
         return false;
     }
-    $('#peoplelist').append("<div class=\"list-group-item\" data-user=\"" + p + "\">" + p + "<div onclick=\"removePerson('" + p + "')\" class=\"btn btn-danger btn-sm pull-right\"><i class=\"fa fa-trash-o\"></i></div><input type=\"hidden\" name=\"employees[]\" value=\"" + p + "\" /></div>");
+    $('#peoplelist').append("<div class=\"list-group-item\" data-user=\"" + p + "\">" + p + "<div class=\"btn btn-danger btn-sm pull-right rmperson\"><i class=\"fa fa-trash-o\"></i></div><input type=\"hidden\" name=\"employees[]\" value=\"" + p + "\" /></div>");
     $("#people-box").val("");
 }
 
 function removePerson(p) {
     $("#peoplelist div[data-user=" + p + "]").remove();
 }
+
+$('#peoplelist').on("click", ".rmperson", function () {
+    removePerson($(this).parent().data("user"));
+});

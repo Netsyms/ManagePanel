@@ -3,7 +3,7 @@ require_once __DIR__ . '/../required.php';
 
 redirectifnotloggedin();
 ?>
-<div class="btn-group" style="margin-bottom: 10px;">
+<div class="btn-group mgn-btm-10px">
     <a href="app.php?page=addpermission" class="btn btn-success"><i class="fa fa-plus"></i> <?php lang("new permission"); ?></a>
 </div>
 <table id="permtable" class="table table-bordered table-striped">

@@ -91,7 +91,10 @@ define("PAGES", [
     "export" => [
         "title" => "report export",
         "navbar" => true,
-        "icon" => "download"
+        "icon" => "download",
+        "scripts" => [
+            "static/js/export.js"
+        ]
     ],
     "404" => [
         "title" => "404 error"

@@ -31,5 +31,5 @@ redirectifnotloggedin();
     ?>
     <input type="hidden" name="code" value="<?php echo $code; ?>" />
     
-    <button type="submit" class="btn btn-success" onclick="setTimeout(function () {window.location.reload();}, 1000)"><i class="fa fa-download"></i> <?php lang("generate report"); ?></button>
+    <button type="submit" class="btn btn-success" id="genrptbtn"><i class="fa fa-download"></i> <?php lang("generate report"); ?></button>
 </form>

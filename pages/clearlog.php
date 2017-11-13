@@ -12,7 +12,7 @@ redirectifnotloggedin();
                 </h3>
             </div>
             <div class="panel-body">
-                <div style="text-align: center;">
+                <div class="center-text">
                     <p><i class="fa fa-exclamation-triangle fa-5x"></i></p>
                     <h4><?php lang("really clear log") ?></h4>
                 </div>

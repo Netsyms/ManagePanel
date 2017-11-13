@@ -38,13 +38,13 @@ if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
                         <button class="btn btn-default" type="button" id="addpersonbtn"><i class="fa fa-plus"></i> <?php lang("add") ?></button>
                     </div>
                 </div>
-                <div class="panel" style="max-height: 700px; overflow-y: scroll;">
+                <div class="panel" id="peoplelist-panel">
                     <div class="list-group" id="peoplelist">
                         <?php
                         foreach ($assigned as $user) {
                             ?>
                             <div class="list-group-item" data-user="<?php echo $user; ?>">
-                                <?php echo $user; ?> <div onclick="removePerson('<?php echo $user; ?>')" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash-o"></i></div><input type="hidden" name="employees[]" value="<?php echo $user; ?>" />
+                                <?php echo $user; ?> <div class="btn btn-danger btn-sm pull-right rmperson"><i class="fa fa-trash-o"></i></div><input type="hidden" name="employees[]" value="<?php echo $user; ?>" />
                             </div>
                             <?php
                         }

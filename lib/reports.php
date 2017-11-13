@@ -208,6 +208,7 @@ function dataToODS($data, $name = "report") {
 }
 
 function dataToHTML($data, $name = "report") {
+    global $SECURE_NONCE;
     // HTML exporter doesn't like null values
     for ($i = 0; $i < count($data); $i++) {
         for ($j = 0; $j < count($data[$i]); $j++) {
@@ -223,7 +224,7 @@ function dataToHTML($data, $name = "report") {
             . "<meta name=\"viewport\" content=\"width=device-width\">\n"
             . "<title>" . $name . "_" . date("Y-m-d_Hi") . "</title>\n"
             . <<<STYLE
-<style>
+<style nonce="$SECURE_NONCE">
     .table-csv-data {
         border-collapse: collapse;
     }

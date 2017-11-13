@@ -3,7 +3,7 @@ require_once __DIR__ . '/../required.php';
 
 redirectifnotloggedin();
 ?>
-<div class="btn-group" style="margin-bottom: 10px;">
+<div class="btn-group mgn-btm-10px">
     <a href="app.php?page=edituser" class="btn btn-success"><i class="fa fa-user-plus"></i> <?php lang("new user"); ?></a>
 </div>
 <table id="usertable" class="table table-bordered table-striped">
@@ -20,36 +20,6 @@ redirectifnotloggedin();
         </tr>
     </thead>
     <tbody>
-        <?php
-        /* $users = $database->select('accounts', [
-          "[>]acctstatus" => ['acctstatus' => 'statusid'],
-          "[>]accttypes" => ['accttype' => 'typeid']
-          ], [
-          'uid',
-          'username',
-          'realname',
-          'email',
-          'acctstatus',
-          'statuscode',
-          'accttype',
-          'typecode'
-          ]);
-          foreach ($users as $u) {
-          ?>
-          <tr>
-          <td></td>
-          <td>
-          <a class="btn btn-blue btn-xs" href="app.php?page=edituser&id=<?php echo $u['uid']; ?>"><i class="fa fa-pencil-square-o"></i> <?php lang("edit"); ?></a>
-          </td>
-          <td><?php echo $u['realname']; ?></td>
-          <td><?php echo $u['username']; ?></td>
-          <td><?php echo ($u['email'] == "NOEMAIL@EXAMPLE.COM" ? "" : $u['email']); ?></td>
-          <td><?php echo $u['statuscode']; ?></td>
-          <td><?php echo $u['typecode']; ?></td>
-          </tr>
-          <?php
-          } */
-        ?>
     </tbody>
     <tfoot>
         <tr>
@@ -63,7 +33,7 @@ redirectifnotloggedin();
             <th data-priority="4"><i class="fa fa-fw fa-server hidden-xs"></i> <?php lang('type'); ?></th>
     </tfoot>
 </table>
-<script>
+<script nonce="<?php echo $SECURE_NONCE; ?>">
     /* Give JavaScript access to the lang string
      * it needs to inject the show deleted checkbox
      */

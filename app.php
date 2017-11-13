@@ -71,7 +71,7 @@ if (!is_empty($_GET['page'])) {
                                 }
                                 ?>
                                 <a class="navbar-brand" href="app.php">
-                                    <img style="height: 35px; padding-bottom: 12px; padding-left: 5px;" src="<?php echo $src; ?>" />
+                                    <img src="<?php echo $src; ?>" />
                                 </a>
                                 <?php
                             }
