@@ -16,13 +16,24 @@ if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
 }
 ?>
 
-<form role="form" action="action.php" method="POST">
+<?php if ($employees !== false) { ?>
+    <form role="form" action="action.php" method="POST">
+    <?php } ?>
     <div class="alert alert-brown"><?php lang("select a manager to view or edit employees"); ?></div>
     <div class="row">
         <div class="col-xs-12 col-md-6">
             <div class="form-group">
                 <label for="manager-box"><i class="fa fa-id-card-o"></i> <?php lang("manager"); ?></label><br />
-                <input type="text" id="manager-box" class="form-control" value="<?php echo $user ?>" name="manager" placeholder="<?php lang("type to select a manager"); ?>" />
+                <div class="row">
+                    <div class="col-xs-8 col-sm-10 col-md-9 col-lg-10">
+                        <input type="text"<?php if ($employees === false) { ?>id="manager-box"<?php } ?> class="form-control" value="<?php echo $user ?>" name="manager" placeholder="<?php lang("type to select a manager"); ?>" <?php if ($employees !== false) { echo "readonly"; }?>/>
+                    </div>
+                    <div class="col-xs-4 col-sm-2 col-md-3 col-lg-2">
+                        <?php if ($employees === false) { ?>
+                            <button class="btn btn-default" type="button" id="selectmanagerbtn"><i class="fa fa-chevron-right"></i> <?php lang("next") ?></button>
+                        <?php } ?>
+                    </div>
+                </div>
             </div>
         </div>
         <?php
@@ -63,5 +74,5 @@ if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
 
 <?php if ($employees !== false) { ?>
     <button type="submit" class="btn btn-success pull-right" id="save-btn"><i class="fa fa-floppy-o"></i> <?php lang("save"); ?></button>
+    </form>
 <?php } ?>
-</form>

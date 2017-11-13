@@ -62,6 +62,16 @@ var manoptions = {
 
 $("#manager-box").easyAutocomplete(manoptions);
 
+$("#manager-box").keyup(function (e) {
+    if (e.keyCode == 13) {
+        $("#selectmanagerbtn").click();
+    }
+});
+
+$("#selectmanagerbtn").click(function () {
+    document.location.href = "app.php?page=managers&man=" + $("#manager-box").val();
+});
+
 $("#people-box").keyup(function (event) {
     if (event.keyCode == 13) {
         $("#addpersonbtn").click();
