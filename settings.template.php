@@ -7,9 +7,9 @@ define("DEBUG", false);
 // AccountHub database connection settings
 // See http://medoo.in/api/new for info
 define("DB_TYPE", "mysql");
-define("DB_NAME", "sso");
+define("DB_NAME", "accounthub");
 define("DB_SERVER", "localhost");
-define("DB_USER", "sso");
+define("DB_USER", "accounthub");
 define("DB_PASS", "");
 define("DB_CHARSET", "utf8");
 
