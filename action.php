@@ -115,7 +115,7 @@ switch ($VARS['action']) {
         }
         $manager = getUserByUsername($VARS['manager'])['uid'];
         $already_assigned = $database->select('managers', 'employeeid', ['managerid' => $manager]);
-        
+
         foreach ($VARS['employees'] as $u) {
             if (!user_exists($u)) {
                 returnToSender("user_not_exists", htmlentities($u));
@@ -149,12 +149,35 @@ switch ($VARS['action']) {
         }
         $database->delete('managers', ['AND' => ['managerid' => $VARS['mid'], 'employeeid' => $VARS['eid']]]);
         returnToSender("relationship_deleted");
+    case "editperms":
+        if (!$database->has('accounts', ['username' => $VARS['user']])) {
+            returnToSender("invalid_userid");
+        }
+        $uid = $database->select('accounts', 'uid', ['username' => $VARS['user']])[0];
+        $already_assigned = $database->select('assigned_permissions', 'permid', ['uid' => $uid]);
+        $permids = [];
+        foreach ($VARS['permissions'] as $perm) {
+            if (!$database->has('permissions', ['permcode' => $perm])) {
+                returnToSender("permission_not_exists", htmlentities($perm));
+            }
+            
+            $permid = $database->get('permissions', 'permid', ['permcode' => $perm]);
+            $permids[] = $permid;
+            $already_assigned = array_diff($already_assigned, [$permid]); // Remove permission from old list
+        }
+        foreach ($already_assigned as $permid) {
+            $database->delete('assigned_permissions', ["AND" => ['uid' => $uid, 'permid' => $permid]]);
+        }
+        foreach ($permids as $permid) {
+            $database->insert('assigned_permissions', ['uid' => $uid, 'permid' => $permid]);
+        }
+        returnToSender("permissions_assigned", "", ["user" => $VARS['user']]);
     case "addpermission":
         if (!$database->has('accounts', ['username' => $VARS['user']])) {
             returnToSender("invalid_userid");
         }
         if (!$database->has('permissions', ['permcode' => $VARS['perm']])) {
-            returnToSender("permission_not_exists");
+            returnToSender("permission_not_exists", htmlentities($VARS['perm']));
         }
         $uid = $database->select('accounts', 'uid', ['username' => $VARS['user']])[0];
         $pid = $database->select('permissions', 'permid', ['permcode' => $VARS['perm']])[0];
@@ -165,7 +188,7 @@ switch ($VARS['action']) {
             returnToSender("invalid_userid");
         }
         if (!$database->has('permissions', ['permid' => $VARS['pid']])) {
-            returnToSender("permission_not_exists");
+            returnToSender("permission_not_exists", htmlentities($VARS['pid']));
         }
         $database->delete('assigned_permissions', ['AND' => ['uid' => $VARS['uid'], 'permid' => $VARS['pid']]]);
         returnToSender("permission_deleted");

@@ -1,3 +1,26 @@
+function addPerson(p) {
+    p = p.trim();
+    if (p == "") {
+        return false;
+    }
+    if ($("#peoplelist div[data-user=" + p + "]").length) {
+        $("#peoplelist .list-group-item[data-user=" + p + "]").animate({
+            backgroundColor: "#ff0000",
+        }, 500, "linear", function () {
+            $("#peoplelist .list-group-item[data-user=" + p + "]").animate({
+                backgroundColor: "#ffffff",
+            }, 500);
+        });
+        return false;
+    }
+    $('#peoplelist').append("<div class=\"list-group-item\" data-user=\"" + p + "\">" + p + "<div class=\"btn btn-danger btn-sm pull-right rmperson\"><i class=\"fa fa-trash-o\"></i></div><input type=\"hidden\" name=\"employees[]\" value=\"" + p + "\" /></div>");
+    $("#people-box").val("");
+}
+
+function removePerson(p) {
+    $("#peoplelist div[data-user=" + p + "]").remove();
+}
+
 var empoptions = {
     url: "action.php",
     ajaxSettings: {
@@ -25,7 +48,8 @@ var empoptions = {
             var value = $("#people-box").getSelectedItemData().username;
             addPerson(value);
         }
-    }
+    },
+    requestDelay: 500
 };
 
 $("#people-box").easyAutocomplete(empoptions);
@@ -57,7 +81,8 @@ var manoptions = {
             var value = $("#manager-box").getSelectedItemData().username;
             document.location.href = "app.php?page=managers&man=" + value;
         }
-    }
+    },
+    requestDelay: 500
 };
 
 $("#manager-box").easyAutocomplete(manoptions);
@@ -89,29 +114,6 @@ $("#people-box").keydown(function (event) {
 $("#addpersonbtn").click(function () {
     addPerson($("#people-box").val());
 });
-
-function addPerson(p) {
-    p = String.trim(p);
-    if (p == "") {
-        return false;
-    }
-    if ($("#peoplelist div[data-user=" + p + "]").length) {
-        $("#peoplelist .list-group-item[data-user=" + p + "]").animate({
-            backgroundColor: "#ff0000",
-        }, 500, "linear", function () {
-            $("#peoplelist .list-group-item[data-user=" + p + "]").animate({
-                backgroundColor: "#ffffff",
-            }, 500);
-        });
-        return false;
-    }
-    $('#peoplelist').append("<div class=\"list-group-item\" data-user=\"" + p + "\">" + p + "<div class=\"btn btn-danger btn-sm pull-right rmperson\"><i class=\"fa fa-trash-o\"></i></div><input type=\"hidden\" name=\"employees[]\" value=\"" + p + "\" /></div>");
-    $("#people-box").val("");
-}
-
-function removePerson(p) {
-    $("#peoplelist div[data-user=" + p + "]").remove();
-}
 
 $('#peoplelist').on("click", ".rmperson", function () {
     removePerson($(this).parent().data("user"));

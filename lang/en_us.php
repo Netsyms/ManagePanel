@@ -78,7 +78,7 @@ define("STRINGS", [
     "delete permission" => "Delete Permission",
     "adding permission" => "Adding Permission",
     "user" => "User",
-    "permission does not exist" => "Permission does not exist.",
+    "permission does not exist" => "Permission does not exist: {arg}",
     "really delete permission" => "Are you sure you want to revoke this permission?",
     "permission added" => "Permission assigned.",
     "permission deleted" => "Permission deleted.",
@@ -107,5 +107,9 @@ define("STRINGS", [
     "manager username" => "Mgr. Username",
     "employee name" => "Employee", 
     "employee username" => "Emp. Username",
-    "permission id" => "Perm. ID"
+    "permission id" => "Perm. ID",
+    "permissions assigned" => "Permissions assigned.",
+    "type to select a user" => "Type to select a user",
+    "type to add a permission" => "Type to add a permission",
+    "select a user to view or edit permissions" => "Select a user to view or edit the assigned permissions."
 ]);

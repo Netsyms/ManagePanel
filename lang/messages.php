@@ -45,6 +45,10 @@ define("MESSAGES", [
         "string" => "permission does not exist",
         "type" => "danger"
     ],
+    "permissions_assigned" => [
+        "string" => "permissions assigned",
+        "type" => "success"
+    ],
     "permission_added" => [
         "string" => "permission added",
         "type" => "success"
