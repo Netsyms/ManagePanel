@@ -15,6 +15,7 @@ redirectifnotloggedin();
             <label for="type"><?php lang("report type"); ?></label>
             <select name="type" class="form-control" required>
                 <option value="users"><?php lang("users") ?></option>
+                <option value="groups"><?php lang("groups") ?></option>
                 <option value="managers"><?php lang("managers") ?></option>
                 <option value="permissions"><?php lang("permissions") ?></option>
                 <option value="security"><?php lang("security log") ?></option>

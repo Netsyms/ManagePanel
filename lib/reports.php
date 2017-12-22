@@ -73,6 +73,32 @@ function getUserReport() {
     return $out;
 }
 
+function getGroupReport() {
+    global $database;
+    $groups = $database->select('assigned_groups', [
+        "[>]groups" => ['groupid'],
+        "[>]accounts" => ['uid']
+            ], [
+        'username',
+        'realname',
+        'accounts.uid',
+        'groupname',
+        'groupid'
+    ]);
+    $header = [lang("group id", false), lang("group name", false), lang("uid", false), lang("username", false), lang("name", false)];
+    $out = [$header];
+    for ($i = 0; $i < count($groups); $i++) {
+        $out[] = [
+            $groups[$i]["groupid"],
+            $groups[$i]["groupname"],
+            $groups[$i]["uid"],
+            $groups[$i]["username"],
+            $groups[$i]["realname"]
+        ];
+    }
+    return $out;
+}
+
 function getManagerReport() {
     global $database;
     $managers = $database->select('managers', [
@@ -159,6 +185,9 @@ function getReportData($type) {
     switch ($type) {
         case "users":
             return getUserReport();
+            break;
+        case "groups":
+            return getGroupReport();
             break;
         case "managers":
             return getManagerReport();

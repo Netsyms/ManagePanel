@@ -133,4 +133,6 @@ define("STRINGS", [
     "enter group name" => "Group name",
     "group management" => "Group Management",
     "group assignments" => "Group Assignments",
+    "group id" => "Group ID",
+    "group name" => "Group Name"
 ]);
