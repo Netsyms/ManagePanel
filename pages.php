@@ -36,6 +36,18 @@ define("PAGES", [
         "title" => "delete user",
         "navbar" => false
     ],
+    "groups" => [
+        "title" => "groups",
+        "navbar" => true,
+        "icon" => "object-group",
+        "styles" => [
+            "static/css/easy-autocomplete.min.css"
+        ],
+        "scripts" => [
+            "static/js/jquery.easy-autocomplete.min.js",
+            "static/js/groups.js"
+        ],
+    ],
     "authlog" => [
         "title" => "security log",
         "navbar" => true,

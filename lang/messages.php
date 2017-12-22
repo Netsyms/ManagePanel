@@ -74,4 +74,24 @@ define("MESSAGES", [
         "string" => "manager does not exist",
         "type" => "danger"
     ],
+    "invalid_group" => [
+        "string" => "group does not exist",
+        "type" => "danger"
+    ],
+    "group_assigned" => [
+        "string" => "group members updated",
+        "type" => "success"
+    ],
+    "group_added" => [
+        "string" => "group added",
+        "type" => "success"
+    ],
+    "group_deleted" => [
+        "string" => "group deleted",
+        "type" => "success"
+    ],
+    "group_exists" => [
+        "string" => "group already exists",
+        "type" => "danger"
+    ],
 ]);

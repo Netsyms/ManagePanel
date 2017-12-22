@@ -165,7 +165,7 @@ switch ($VARS['action']) {
             if (!$database->has('permissions', ['permcode' => $perm])) {
                 returnToSender("permission_not_exists", htmlentities($perm));
             }
-            
+
             $permid = $database->get('permissions', 'permid', ['permcode' => $perm]);
             $permids[] = $permid;
             $already_assigned = array_diff($already_assigned, [$permid]); // Remove permission from old list
@@ -211,6 +211,41 @@ switch ($VARS['action']) {
         }
         $data = $database->select('permissions', ['permcode (name)', 'perminfo (info)'], ["OR" => ['permcode[~]' => $VARS['q'], 'perminfo[~]' => $VARS['q']], "LIMIT" => 10]);
         exit(json_encode($data));
+    case "assigngroup":
+        if (!$database->has('groups', ['groupid' => $VARS['gid']])) {
+            returnToSender("invalid_group");
+        }
+        $gid = $VARS['gid'];
+        $already_assigned = $database->select('assigned_groups', 'uid', ['groupid' => $gid]);
+
+        require_once __DIR__ . "/lib/userinfo.php";
+        foreach ($VARS['users'] as $u) {
+            if (!user_exists($u)) {
+                returnToSender("user_not_exists", htmlentities($u));
+            }
+            $uid = getUserByUsername($u)['uid'];
+            $database->insert('assigned_groups', ['groupid' => $gid, 'uid' => $uid]);
+            $already_assigned = array_diff($already_assigned, [$uid]); // Remove user from old list
+        }
+        foreach ($already_assigned as $uid) {
+            $database->delete('assigned_groups', ["AND" => ['uid' => $uid, 'groupid' => $gid]]);
+        }
+        returnToSender("group_assigned", "", ["gid" => $gid]);
+        break;
+    case "addgroup":
+        $group = htmlspecialchars(strip_tags($VARS['group']), ENT_HTML5);
+        if ($database->has('groups', ['groupname' => $group])) {
+            returnToSender("group_exists");
+        }
+        $database->insert('groups', ['groupname' => $group]);
+        returnToSender("group_added");
+    case "rmgroup":
+        if (!$database->has('groups', ['groupid' => $VARS['gid']])) {
+            returnToSender("invalid_group");
+        }
+        $database->delete('assigned_groups', ['groupid' => $VARS['gid']]);
+        $database->delete('groups', ['groupid' => $VARS['gid']]);
+        returnToSender("group_deleted");
     case "export":
         require_once __DIR__ . "/lib/reports.php";
         generateReport($VARS['type'], $VARS['format']);
