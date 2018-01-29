@@ -8,7 +8,7 @@ var usertable = $('#usertable').DataTable({
             display: $.fn.dataTable.Responsive.display.modal({
                 header: function (row) {
                     var data = row.data();
-                    return "<i class=\"fa fa-user fa-fw\"></i> " + data[2];
+                    return "<i class=\"fas fa-user fa-fw\"></i> " + data[2];
                 }
             }),
             renderer: $.fn.dataTable.Responsive.renderer.tableAll({
@@ -49,7 +49,7 @@ var usertable = $('#usertable').DataTable({
                     (row.deleted == 1 ? "<del style=\"color: red;\">" : "") + row.realname + (row.deleted == 1 ? "</del>" : ""),
                     (row.deleted == 1 ? "<span style=\"color: red;\">" : "") + row.username + (row.deleted == 1 ? "</span>" : ""),
                     row.email,
-                    (row['2fa'] == true ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>"),
+                    (row['2fa'] == true ? "<i class='fas fa-check'></i>" : "<i class='fa fa-times'></i>"),
                     row.statuscode,
                     row.typecode
                 ]);

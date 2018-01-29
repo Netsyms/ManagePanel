@@ -38,11 +38,11 @@ function addPermission(permcode, permdesc) {
                     return;
                 }
             }
-            $('#permslist').append("<div class=\"list-group-item\" data-permcode=\"" + permcode + "\">" + permcode + "<div class=\"btn btn-danger btn-sm pull-right rmperm\"><i class=\"fa fa-trash-o\"></i></div><input type=\"hidden\" name=\"permissions[]\" value=\"" + permcode + "\" /> <p class=\"small\">" + permdesc + "</p></div>");
+            $('#permslist').append("<div class=\"list-group-item\" data-permcode=\"" + permcode + "\">" + permcode + "<div class=\"btn btn-danger btn-sm float-right rmperm\"><i class=\"fas fa-trash\"></i></div><input type=\"hidden\" name=\"permissions[]\" value=\"" + permcode + "\" /> <p class=\"small\">" + permdesc + "</p></div>");
             $("#perms-box").val("");
         }, "json");
     } else {
-        $('#permslist').append("<div class=\"list-group-item\" data-permcode=\"" + permcode + "\">" + permcode + "<div class=\"btn btn-danger btn-sm pull-right rmperm\"><i class=\"fa fa-trash-o\"></i></div><input type=\"hidden\" name=\"permissions[]\" value=\"" + permcode + "\" /> <p class=\"small\">" + permdesc + "</p></div>");
+        $('#permslist').append("<div class=\"list-group-item\" data-permcode=\"" + permcode + "\">" + permcode + "<div class=\"btn btn-danger btn-sm float-right rmperm\"><i class=\"fas fa-trash\"></i></div><input type=\"hidden\" name=\"permissions[]\" value=\"" + permcode + "\" /> <p class=\"small\">" + permdesc + "</p></div>");
         $("#perms-box").val("");
     }
 }
@@ -79,7 +79,8 @@ var options = {
             document.location.href = "app.php?page=permissions&user=" + value;
         }
     },
-    requestDelay: 500
+    requestDelay: 500,
+    cssClasses: "form-control form-control-sm"
 };
 
 $("#perms-box").easyAutocomplete({
@@ -111,7 +112,8 @@ $("#perms-box").easyAutocomplete({
             addPermission(permcode, permdesc);
         }
     },
-    requestDelay: 500
+    requestDelay: 500,
+    cssClasses: "form-control form-control-sm"
 });
 
 $("#user-box").easyAutocomplete(options);

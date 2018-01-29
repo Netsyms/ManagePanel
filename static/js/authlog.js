@@ -8,7 +8,7 @@ $('#logtable').DataTable({
             display: $.fn.dataTable.Responsive.display.modal({
                 header: function (row) {
                     var data = row.data();
-                    return "<i class=\"fa fa-list fa-fw\"></i> " + data[1];
+                    return "<i class=\"fas fa-list fa-fw\"></i> " + data[1];
                 }
             }),
             renderer: $.fn.dataTable.Responsive.renderer.tableAll({

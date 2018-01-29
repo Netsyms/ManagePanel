@@ -10,12 +10,12 @@ define("PAGES", [
     "home" => [
         "title" => "home",
         "navbar" => true,
-        "icon" => "home"
+        "icon" => "fas fa-home"
     ],
     "users" => [
         "title" => "users",
         "navbar" => true,
-        "icon" => "users",
+        "icon" => "fas fa-users",
         "styles" => [
             "static/css/datatables.min.css",
             "static/css/tables.css"
@@ -39,7 +39,7 @@ define("PAGES", [
     "groups" => [
         "title" => "groups",
         "navbar" => true,
-        "icon" => "object-group",
+        "icon" => "fas fa-object-group",
         "styles" => [
             "static/css/easy-autocomplete.min.css"
         ],
@@ -51,7 +51,7 @@ define("PAGES", [
     "authlog" => [
         "title" => "security log",
         "navbar" => true,
-        "icon" => "list",
+        "icon" => "fas fa-list",
         "styles" => [
             "static/css/datatables.min.css",
             "static/css/tables.css"
@@ -68,7 +68,7 @@ define("PAGES", [
     "managers" => [
         "title" => "managers",
         "navbar" => true,
-        "icon" => "id-card-o",
+        "icon" => "fas fa-id-card",
         "styles" => [
             "static/css/easy-autocomplete.min.css"
         ],
@@ -80,7 +80,7 @@ define("PAGES", [
     "permissions" => [
         "title" => "permissions",
         "navbar" => true,
-        "icon" => "key",
+        "icon" => "fas fa-key",
         "styles" => [
             "static/css/easy-autocomplete.min.css"
         ],
@@ -92,7 +92,7 @@ define("PAGES", [
     "export" => [
         "title" => "report export",
         "navbar" => true,
-        "icon" => "download",
+        "icon" => "fas fa-download",
         "scripts" => [
             "static/js/export.js"
         ]

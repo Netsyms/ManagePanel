@@ -17,7 +17,7 @@ function addPerson(p) {
         });
         return false;
     }
-    $('#peoplelist').append("<div class=\"list-group-item\" data-user=\"" + p + "\">" + p + "<div class=\"btn btn-danger btn-sm pull-right rmperson\"><i class=\"fa fa-trash-o\"></i></div><input type=\"hidden\" name=\"employees[]\" value=\"" + p + "\" /></div>");
+    $('#peoplelist').append("<div class=\"list-group-item\" data-user=\"" + p + "\">" + p + "<div class=\"btn btn-danger btn-sm float-right rmperson\"><i class=\"fas fa-trash\"></i></div><input type=\"hidden\" name=\"employees[]\" value=\"" + p + "\" /></div>");
     $("#people-box").val("");
 }
 
@@ -53,7 +53,8 @@ var empoptions = {
             addPerson(value);
         }
     },
-    requestDelay: 500
+    requestDelay: 500,
+    cssClasses: "form-control form-control-sm"
 };
 
 $("#people-box").easyAutocomplete(empoptions);
@@ -86,7 +87,8 @@ var manoptions = {
             document.location.href = "app.php?page=managers&man=" + value;
         }
     },
-    requestDelay: 500
+    requestDelay: 500,
+    cssClasses: "form-control form-control-sm"
 };
 
 $("#manager-box").easyAutocomplete(manoptions);

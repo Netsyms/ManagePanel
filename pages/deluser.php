@@ -1,5 +1,4 @@
 <?php
-
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -29,40 +28,36 @@ if (!is_empty($VARS['id'])) {
     die();
 }
 ?>
-<div class="row">
-    <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-        <div class="panel panel-danger">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    <?php lang("delete user") ?>
-                </h3>
-            </div>
-            <div class="panel-body">
-                <div class="center-text">
-                    <p><i class="fa fa-exclamation-triangle fa-5x"></i></p>
-                    <h4><?php lang("really delete user") ?></h4>
-                </div>
+<div class="row justify-content-center">
+    <div class="col-12 col-sm-6 col-sm-offset-3">
+        <div class="card border-red text-center">
+            <h3 class="card-header text-red">
+                <?php lang("delete user") ?>
+            </h3>
+            <div class="card-body">
+                <p><i class="fas fa-exclamation-triangle fa-10x"></i></p>
+                <h4><?php lang("really delete user") ?></h4>
                 <div class="list-group">
                     <div class="list-group-item">
-                        <i class="fa fa-fw fa-user"></i> <?php echo $userdata['realname']; ?>
+                        <i class="fas fa-fw fa-user"></i> <?php echo $userdata['realname']; ?>
                     </div>
                     <div class="list-group-item">
-                        <i class="fa fa-fw fa-id-badge"></i> <?php echo $userdata['username']; ?>
+                        <i class="fas fa-fw fa-id-badge"></i> <?php echo $userdata['username']; ?>
                     </div>
                     <?php
                     if (!is_empty($userdata['email'])) {
                         ?>
                         <div class="list-group-item">
-                            <i class="fa fa-fw fa-envelope"></i> <?php echo $userdata['email']; ?>
+                            <i class="fas fa-fw fa-envelope"></i> <?php echo $userdata['email']; ?>
                         </div>
                         <?php
                     }
                     ?>
                 </div>
             </div>
-            <div class="panel-footer">
-                <a href="action.php?action=deleteuser&source=users&id=<?php echo htmlspecialchars($VARS['id']); ?>" class="btn btn-danger"><i class="fa fa-times"></i> <?php lang('delete'); ?></a>
-                <a href="app.php?page=users" class="btn btn-primary pull-right"><i class="fa fa-arrow-left"></i> <?php lang('cancel'); ?></a>
+            <div class="card-footer d-flex">
+                <a href="app.php?page=users" class="btn btn-primary mr-auto"><i class="fas fa-arrow-left"></i> <?php lang('cancel'); ?></a>
+                <a href="action.php?action=deleteuser&source=users&id=<?php echo htmlspecialchars($VARS['id']); ?>" class="btn btn-danger"><i class="fas fa-times"></i> <?php lang('delete'); ?></a>
             </div>
         </div>
     </div>

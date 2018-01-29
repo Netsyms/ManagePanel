@@ -1,5 +1,4 @@
 <?php
-
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -52,23 +51,21 @@ if ($userdata['typecode'] != "LOCAL") {
 ?>
 
 <form role="form" action="action.php" method="POST">
-    <div class="panel panel-blue">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <?php
-                if ($editing) {
-                    ?>
-                    <i class="fa fa-pencil-square-o"></i> <?php lang2("editing user", ['user' => "<span id=\"name_title\">" . htmlspecialchars($userdata['realname']) . "</span>"]); ?>
-                    <?php
-                } else {
-                    ?>
-                    <i class="fa fa-pencil-square-o"></i> <?php lang("adding user"); ?>
-                    <?php
-                }
+    <div class="card border-blue">
+        <h3 class="card-header text-blue">
+            <?php
+            if ($editing) {
                 ?>
-            </h3>
-        </div>
-        <div class="panel-body">
+                <i class="far fa-edit"></i> <?php lang2("editing user", ['user' => "<span id=\"name_title\">" . htmlspecialchars($userdata['realname']) . "</span>"]); ?>
+                <?php
+            } else {
+                ?>
+                <i class="far fa-edit"></i> <?php lang("adding user"); ?>
+                <?php
+            }
+            ?>
+        </h3>
+        <div class="card-body">
             <?php
             if (!$localacct) {
                 ?>
@@ -86,20 +83,20 @@ if ($userdata['typecode'] != "LOCAL") {
             }
             ?>
             <div class="form-group">
-                <label for="name"><i class="fa fa-user"></i> <?php lang("name"); ?></label>
+                <label for="name"><i class="fas fa-user"></i> <?php lang("name"); ?></label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="<?php lang("placeholder name"); ?>" required="required" value="<?php echo htmlspecialchars($userdata['realname']); ?>" />
             </div>
 
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
-                        <label for="username"><i class="fa fa-id-badge"></i> <?php lang("username"); ?></label>
+                        <label for="username"><i class="fas fa-id-badge"></i> <?php lang("username"); ?></label>
                         <input type="text" <?php if (!$localacct) echo "readonly=\"readonly\""; ?> class="form-control" name="username" id="username" placeholder="<?php lang("placeholder username"); ?>" required="required" value="<?php echo htmlspecialchars($userdata['username']); ?>" />
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
-                        <label for="email"><i class="fa fa-envelope"></i> <?php lang("email"); ?></label>
+                        <label for="email"><i class="fas fa-envelope"></i> <?php lang("email"); ?></label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="<?php lang("placeholder email address"); ?>" value="<?php echo htmlspecialchars($userdata['email']); ?>" />
                     </div>
                 </div>
@@ -108,14 +105,14 @@ if ($userdata['typecode'] != "LOCAL") {
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
-                        <label for="pass"><i class="fa fa-lock"></i> <?php lang("new password"); ?></label>
+                        <label for="pass"><i class="fas fa-lock"></i> <?php lang("new password"); ?></label>
                         <input type="text" <?php if (!$localacct) echo "readonly=\"readonly\""; ?> autocomplete="new-password" class="form-control" name="pass" id="pass" placeholder="<?php lang("placeholder password"); ?>" />
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
-                        <label for="status"><i class="fa fa-check-circle"></i> <?php lang("status"); ?></label>
+                        <label for="status"><i class="fas fa-check-circle"></i> <?php lang("status"); ?></label>
                         <select class="form-control" name="status" id="status" required="required">
                             <?php
                             $statuses = $database->select('acctstatus', ['statusid (id)', 'statuscode (code)'], ["ORDER" => "statusid"]);
@@ -138,20 +135,18 @@ if ($userdata['typecode'] != "LOCAL") {
         <input type="hidden" name="action" value="edituser" />
         <input type="hidden" name="source" value="users" />
 
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i> <?php lang("save"); ?></button>
+        <div class="card-footer d-flex">
+            <button type="submit" class="btn btn-success mr-auto"><i class="fas fa-save"></i> <?php lang("save"); ?></button>
             <?php
             if ($editing) {
-                echo "<span class=\"pull-right\">";
                 if (!is_empty($userdata['authsecret'])) {
                     ?>
-                    <a href="action.php?action=rmtotp&source=users&id=<?php echo htmlspecialchars($VARS['id']); ?>" class="btn btn-warning btn-xs mgn-top-8px"><i class="fa fa-unlock"></i> <?php lang('remove 2fa'); ?></a> &nbsp; &nbsp;
+                    <a href="action.php?action=rmtotp&source=users&id=<?php echo htmlspecialchars($VARS['id']); ?>" class="btn btn-warning btn-sm"><i class="fas fa-unlock"></i> <?php lang('remove 2fa'); ?></a> &nbsp; &nbsp;
                     <?php
                 }
                 ?>
-                <a href="app.php?page=deluser&id=<?php echo htmlspecialchars($VARS['id']); ?>" class="btn btn-danger btn-xs mgn-top-8px"><i class="fa fa-times"></i> <?php lang('delete'); ?></a>
+                <a href="app.php?page=deluser&id=<?php echo htmlspecialchars($VARS['id']); ?>" class="btn btn-danger"><i class="fas fa-times"></i> <?php lang('delete'); ?></a>
                 <?php
-                echo "</span>";
             }
             ?>
         </div>

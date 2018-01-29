@@ -123,7 +123,7 @@ if ($filter) {
 $out['recordsFiltered'] = $recordsFiltered;
 for ($i = 0; $i < count($users); $i++) {
     $users[$i]["2fa"] = (is_empty($users[$i]["2fa"]) ? false : true);
-    $users[$i]["editbtn"] = '<a class="btn btn-blue btn-xs" href="app.php?page=edituser&id=' . $users[$i]['uid'] . '"><i class="fa fa-pencil-square-o"></i> ' . lang("edit", false) . '</a>';
+    $users[$i]["editbtn"] = '<a class="btn btn-blue btn-sm" href="app.php?page=edituser&id=' . $users[$i]['uid'] . '"><i class="far fa-edit"></i> ' . lang("edit", false) . '</a>';
 }
 $out['users'] = $users;
 
