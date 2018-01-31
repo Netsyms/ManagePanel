@@ -14,11 +14,11 @@ redirectifnotloggedin();
     <thead>
         <tr>
             <th data-priority="0"></th>
-            <th data-priority="1"><i class="fas fa-fw fa-calendar hidden-xs"></i> <?php lang('logtime'); ?></th>
-            <th data-priority="1"><i class="fas fa-fw fa-server hidden-xs"></i> <?php lang('logtype'); ?></th>
-            <th data-priority="2"><i class="fas fa-fw fa-id-badge hidden-xs"></i> <?php lang('username'); ?></th>
-            <th data-priority="3"><i class="fas fa-fw fa-globe hidden-xs"></i> <?php lang('ip address'); ?></th>
-            <th data-priority="3"><i class="fas fa-fw fa-info-circle hidden-xs"></i> <?php lang('other data'); ?></th>
+            <th data-priority="1"><i class="fas fa-fw fa-calendar d-none d-md-inline"></i> <?php lang('logtime'); ?></th>
+            <th data-priority="1"><i class="fas fa-fw fa-server d-none d-md-inline"></i> <?php lang('logtype'); ?></th>
+            <th data-priority="2"><i class="fas fa-fw fa-id-badge d-none d-md-inline"></i> <?php lang('username'); ?></th>
+            <th data-priority="3"><i class="fas fa-fw fa-globe d-none d-md-inline"></i> <?php lang('ip address'); ?></th>
+            <th data-priority="3"><i class="fas fa-fw fa-info-circle d-none d-md-inline"></i> <?php lang('other data'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -27,11 +27,11 @@ redirectifnotloggedin();
     <tfoot>
         <tr>
             <th data-priority="0"></th>
-            <th data-priority="1"><i class="fas fa-fw fa-calendar hidden-xs"></i> <?php lang('logtime'); ?></th>
-            <th data-priority="1"><i class="fas fa-fw fa-server hidden-xs"></i> <?php lang('logtype'); ?></th>
-            <th data-priority="2"><i class="fas fa-fw fa-id-badge hidden-xs"></i> <?php lang('username'); ?></th>
-            <th data-priority="3"><i class="fas fa-fw fa-globe hidden-xs"></i> <?php lang('ip address'); ?></th>
-            <th data-priority="3"><i class="fas fa-fw fa-info-circle hidden-xs"></i> <?php lang('other data'); ?></th>
+            <th data-priority="1"><i class="fas fa-fw fa-calendar d-none d-md-inline"></i> <?php lang('logtime'); ?></th>
+            <th data-priority="1"><i class="fas fa-fw fa-server d-none d-md-inline"></i> <?php lang('logtype'); ?></th>
+            <th data-priority="2"><i class="fas fa-fw fa-id-badge d-none d-md-inline"></i> <?php lang('username'); ?></th>
+            <th data-priority="3"><i class="fas fa-fw fa-globe d-none d-md-inline"></i> <?php lang('ip address'); ?></th>
+            <th data-priority="3"><i class="fas fa-fw fa-info-circle d-none d-md-inline"></i> <?php lang('other data'); ?></th>
     </tfoot>
 </table>
 <br />

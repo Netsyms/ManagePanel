@@ -31,7 +31,7 @@ if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
                     <div class="form-group">
                         <label for="manager-box"><i class="fas fa-id-card"></i> <?php lang("manager"); ?></label><br />
                         <div class="input-group">
-                            <input type="text"<?php if ($employees === false) { ?>id="manager-box"<?php } ?> class="form-control" value="<?php echo $user ?>" name="manager" placeholder="<?php lang("type to select a manager"); ?>" <?php
+                            <input type="text"<?php if ($employees === false) { ?> id="manager-box"<?php } ?> class="form-control" value="<?php echo $user ?>" name="manager" placeholder="<?php lang("type to select a manager"); ?>" <?php
                             if ($employees !== false) {
                                 echo "readonly";
                             }
@@ -80,7 +80,7 @@ if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
 
         <input type="hidden" name="action" value="editmanager" />
         <input type="hidden" name="source" value="managers" />
-        
+
         <?php if ($employees !== false) { ?>
             <div class="card-footer d-flex">
                 <button type="submit" class="btn btn-success ml-auto" id="save-btn"><i class="fas fa-save"></i> <?php lang("save"); ?></button>

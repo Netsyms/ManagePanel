@@ -16,12 +16,12 @@ redirectifnotloggedin();
         <tr>
             <th data-priority="0"></th>
             <th data-priority="1"><?php lang('actions'); ?></th>
-            <th data-priority="1"><i class="fas fa-fw fa-user hidden-xs"></i> <?php lang('name'); ?></th>
-            <th data-priority="2"><i class="fas fa-fw fa-id-badge hidden-xs"></i> <?php lang('username'); ?></th>
-            <th data-priority="3"><i class="fas fa-fw fa-envelope hidden-xs"></i> <?php lang('email'); ?></th>
-            <th data-priority="4"><i class="fas fa-fw fa-lock hidden-xs"></i> <?php lang('2fa'); ?></th>
-            <th data-priority="3"><i class="fas fa-fw fa-check-circle hidden-xs"></i> <?php lang('status'); ?></th>
-            <th data-priority="4"><i class="fas fa-fw fa-server hidden-xs"></i> <?php lang('type'); ?></th>
+            <th data-priority="1"><i class="fas fa-fw fa-user d-none d-md-inline"></i> <?php lang('name'); ?></th>
+            <th data-priority="2"><i class="fas fa-fw fa-id-badge d-none d-md-inline"></i> <?php lang('username'); ?></th>
+            <th data-priority="3"><i class="fas fa-fw fa-envelope d-none d-md-inline"></i> <?php lang('email'); ?></th>
+            <th data-priority="4"><i class="fas fa-fw fa-lock d-none d-md-inline"></i> <?php lang('2fa'); ?></th>
+            <th data-priority="3"><i class="fas fa-fw fa-check-circle d-none d-md-inline"></i> <?php lang('status'); ?></th>
+            <th data-priority="4"><i class="fas fa-fw fa-server d-none d-md-inline"></i> <?php lang('type'); ?></th>
         </tr>
     </thead>
     <tbody>
@@ -30,12 +30,12 @@ redirectifnotloggedin();
         <tr>
             <th data-priority="0"></th>
             <th data-priority="1"><?php lang('actions'); ?></th>
-            <th data-priority="1"><i class="fas fa-fw fa-user hidden-xs"></i> <?php lang('name'); ?></th>
-            <th data-priority="2"><i class="fas fa-fw fa-id-badge hidden-xs"></i> <?php lang('username'); ?></th>
-            <th data-priority="3"><i class="fas fa-fw fa-envelope hidden-xs"></i> <?php lang('email'); ?></th>
-            <th data-priority="4"><i class="fas fa-fw fa-lock hidden-xs"></i> <?php lang('2fa'); ?></th>
-            <th data-priority="3"><i class="fas fa-fw fa-check-circle hidden-xs"></i> <?php lang('status'); ?></th>
-            <th data-priority="4"><i class="fas fa-fw fa-server hidden-xs"></i> <?php lang('type'); ?></th>
+            <th data-priority="1"><i class="fas fa-fw fa-user d-none d-md-inline"></i> <?php lang('name'); ?></th>
+            <th data-priority="2"><i class="fas fa-fw fa-id-badge d-none d-md-inline"></i> <?php lang('username'); ?></th>
+            <th data-priority="3"><i class="fas fa-fw fa-envelope d-none d-md-inline"></i> <?php lang('email'); ?></th>
+            <th data-priority="4"><i class="fas fa-fw fa-lock d-none d-md-inline"></i> <?php lang('2fa'); ?></th>
+            <th data-priority="3"><i class="fas fa-fw fa-check-circle d-none d-md-inline"></i> <?php lang('status'); ?></th>
+            <th data-priority="4"><i class="fas fa-fw fa-server d-none d-md-inline"></i> <?php lang('type'); ?></th>
     </tfoot>
 </table>
 <script nonce="<?php echo $SECURE_NONCE; ?>">
