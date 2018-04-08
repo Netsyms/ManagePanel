@@ -12,10 +12,12 @@ ob_start(); // allow sending headers after content
 // Unicode, solves almost all stupid encoding problems
 header('Content-Type: text/html; charset=utf-8');
 
-// l33t $ecurity h4x
+// Strip PHP version
+header('X-Powered-By: PHP');
+
+// Security
 header('X-Content-Type-Options: nosniff');
 header('X-XSS-Protection: 1; mode=block');
-header('X-Powered-By: PHP'); // no versions makes it harder to find vulns
 header('X-Frame-Options: "DENY"');
 header('Referrer-Policy: "no-referrer, strict-origin-when-cross-origin"');
 $SECURE_NONCE = base64_encode(random_bytes(8));
@@ -81,7 +83,7 @@ function sendError($error) {
             . "<h1>A fatal application error has occurred.</h1>"
             . "<i>(This isn't your fault.)</i>"
             . "<h2>Details:</h2>"
-            . "<p>". htmlspecialchars($error) . "</p>");
+            . "<p>" . htmlspecialchars($error) . "</p>");
 }
 
 date_default_timezone_set(TIMEZONE);
