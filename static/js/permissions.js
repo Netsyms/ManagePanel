@@ -83,39 +83,6 @@ var options = {
     cssClasses: "form-control form-control-sm"
 };
 
-$("#perms-box").easyAutocomplete({
-    url: "action.php",
-    ajaxSettings: {
-        dataType: "json",
-        method: "GET",
-        data: {
-            action: "autocomplete_permission"
-        }
-    },
-    preparePostData: function (data) {
-        data.q = $("#perms-box").val();
-        return data;
-    },
-    getValue: function (element) {
-        return element.name;
-    },
-    template: {
-        type: "custom",
-        method: function (value, item) {
-            return item.name + " <i class=\"small\">" + item.info + "</i>";
-        }
-    },
-    list: {
-        onClickEvent: function () {
-            var permcode = $("#perms-box").getSelectedItemData().name;
-            var permdesc = $("#perms-box").getSelectedItemData().info;
-            addPermission(permcode, permdesc);
-        }
-    },
-    requestDelay: 500,
-    cssClasses: "form-control form-control-sm"
-});
-
 $("#user-box").easyAutocomplete(options);
 
 $("#user-box").keyup(function (e) {

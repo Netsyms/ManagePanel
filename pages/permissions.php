@@ -50,27 +50,17 @@ if ($VARS['user'] && $database->has('accounts', ['username' => $VARS['user']])) 
                         <div class="form-group">
                             <label for="perms-box"><i class="fas fa-key"></i> <?php lang("permissions"); ?></label><br />
                             <div class="input-group">
-                                <?php
-                                if ($database->count('permissions') > 30) {
-                                    ?>
-                                    <input type="text" id="perms-box" class="form-control" placeholder="<?php lang("type to add a permission") ?>" />
+                                <select id="perms-box" class="form-control" data-ac="false">
+                                    <option value="" selected><?php lang("Choose a permission") ?></option>
                                     <?php
-                                } else {
-                                    ?>
-                                    <select id="perms-box" class="form-control">
-                                        <option><?php lang("Choose a permission") ?></option>
-                                        <?php
-                                        $allpermissions = $database->select('permissions', ['permid', 'permcode', 'perminfo']);
-                                        foreach ($allpermissions as $p) {
-                                            if (!in_array($p, $perms)) {
-                                                echo "<option value=\"$p[permcode]\">$p[permcode]: $p[perminfo]</option>";
-                                            }
+                                    $allpermissions = $database->select('permissions', ['permid', 'permcode', 'perminfo']);
+                                    foreach ($allpermissions as $p) {
+                                        if (!in_array($p, $perms)) {
+                                            echo "<option value=\"$p[permcode]\">$p[permcode]: $p[perminfo]</option>";
                                         }
-                                        ?>
-                                    </select>
-                                    <?php
-                                }
-                                ?>
+                                    }
+                                    ?>
+                                </select>
                                 <div class="input-group-append">
                                     <button class="btn btn-default" type="button" id="addpermbtn"><i class="fa fa-plus"></i> <?php lang("add") ?></button>
                                 </div>
