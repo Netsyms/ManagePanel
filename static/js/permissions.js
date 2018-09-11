@@ -83,7 +83,9 @@ var options = {
     cssClasses: "form-control form-control-sm"
 };
 
-$("#user-box").easyAutocomplete(options);
+if ($("#user-box").get(0).tagName != "SELECT") {
+    $("#user-box").easyAutocomplete(options);
+}
 
 $("#user-box").keyup(function (e) {
     if (e.keyCode == 13) {

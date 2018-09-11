@@ -30,13 +30,40 @@ if ($VARS['user'] && $database->has('accounts', ['username' => $VARS['user']])) 
                     <div class="form-group">
                         <label for="user-box"><i class="fas fa-id-card"></i> <?php lang("user"); ?></label><br />
                         <div class="input-group">
-                            <input type="text"<?php if ($permissions === false) { ?>id="user-box"<?php } ?> class="form-control" value="<?php echo $user ?>" name="user" placeholder="<?php lang("type to select a user"); ?>" <?php
-                            if ($permissions !== false) {
-                                echo "readonly";
+                            <?php
+                            if ($database->count('accounts', ['deleted[!]' => 1]) > 30) {
+                                ?>
+                                <input type="text"<?php if ($permissions === false) { ?>id="user-box"<?php } ?> class="form-control" value="<?php echo $user ?>" name="user" placeholder="<?php lang("type to select a user"); ?>" <?php
+                                if ($permissions !== false) {
+                                    echo "readonly";
+                                }
+                                ?>/>
+                                       <?php
+                                   } else {
+                                       if ($permissions === false) {
+                                           ?>
+                                    <select id="user-box" class="form-control" name="user">
+                                        <option value=""><?php lang("Choose a user") ?></option>
+                                        <?php
+                                        $allusers = $database->select('accounts', ['username', 'realname'], ['deleted[!]' => 1, 'ORDER' => ['realname' => 'ASC']]);
+                                        foreach ($allusers as $u) {
+                                            echo "<option value=\"$u[username]\">$u[realname] ($u[username])</option>\n";
+                                        }
+                                        ?>
+                                    </select>
+                                    <?php
+                                } else {
+                                    $realname = $database->get('accounts', 'realname', ['username' => $user]);
+                                    ?>
+                                    <input type="text" class="form-control" value="<?php echo "$realname ($user)" ?>" readonly disabled />
+                                    <input type="hidden" name="user" value="<?php echo $user ?>" />
+                                    <?php
+                                }
                             }
-                            ?>/>
-                            <div class="input-group-append">
-                                <?php if ($permissions === false) { ?>
+                            ?>
+                            <div class = "input-group-append">
+                                <?php if ($permissions === false) {
+                                    ?>
                                     <button class="btn btn-default" type="button" id="selectuserbtn"><i class="fa fa-chevron-right"></i> <?php lang("next") ?></button>
                                 <?php } ?>
                             </div>
