@@ -50,7 +50,27 @@ if ($VARS['user'] && $database->has('accounts', ['username' => $VARS['user']])) 
                         <div class="form-group">
                             <label for="perms-box"><i class="fas fa-key"></i> <?php lang("permissions"); ?></label><br />
                             <div class="input-group">
-                                <input type="text" id="perms-box" class="form-control" placeholder="<?php lang("type to add a permission") ?>" />
+                                <?php
+                                if ($database->count('permissions') > 30) {
+                                    ?>
+                                    <input type="text" id="perms-box" class="form-control" placeholder="<?php lang("type to add a permission") ?>" />
+                                    <?php
+                                } else {
+                                    ?>
+                                    <select id="perms-box" class="form-control">
+                                        <option><?php lang("Choose a permission") ?></option>
+                                        <?php
+                                        $allpermissions = $database->select('permissions', ['permid', 'permcode', 'perminfo']);
+                                        foreach ($allpermissions as $p) {
+                                            if (!in_array($p, $perms)) {
+                                                echo "<option value=\"$p[permcode]\">$p[permcode]: $p[perminfo]</option>";
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                    <?php
+                                }
+                                ?>
                                 <div class="input-group-append">
                                     <button class="btn btn-default" type="button" id="addpermbtn"><i class="fa fa-plus"></i> <?php lang("add") ?></button>
                                 </div>

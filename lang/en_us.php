@@ -117,6 +117,7 @@ define("STRINGS", [
     "permissions assigned" => "Permissions assigned.",
     "type to select a user" => "Type to select a user",
     "type to add a permission" => "Type to add a permission",
+    "Choose a permission" => "Choose a permission",
     "select a user to view or edit permissions" => "Select a user to view or edit the assigned permissions.",
     "group" => "Group",
     "groups" => "Groups",
