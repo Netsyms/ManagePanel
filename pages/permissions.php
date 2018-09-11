@@ -56,7 +56,7 @@ if ($VARS['user'] && $database->has('accounts', ['username' => $VARS['user']])) 
                                     $realname = $database->get('accounts', 'realname', ['username' => $user]);
                                     ?>
                                     <input type="text" class="form-control" value="<?php echo "$realname ($user)" ?>" readonly disabled />
-                                    <input type="hidden" name="user" value="<?php echo $user ?>" />
+                                    <input type="hidden" id="user-box" name="user" value="<?php echo $user ?>" />
                                     <?php
                                 }
                             }
