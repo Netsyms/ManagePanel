@@ -13,10 +13,6 @@ if ($VARS['action'] !== "signout") {
     dieifnotloggedin();
 }
 
-if ((new User($_SESSION['uid']))->hasPermission("ADMIN") == FALSE) {
-    die("You don't have permission to be here.");
-}
-
 /**
  * Redirects back to the page ID in $_POST/$_GET['source'] with the given message ID.
  * The message will be displayed by the app.
