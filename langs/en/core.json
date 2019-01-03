@@ -1,0 +1,7 @@
+{
+    "sign out": "Sign out",
+    "404 error": "404 Error",
+    "page not found": "Page not found.",
+    "invalid parameters": "Invalid request parameters.",
+    "login server error": "The login server returned an error: {arg}"
+}

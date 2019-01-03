@@ -7,17 +7,9 @@ require_once __DIR__ . "/../required.php";
 
 redirectifnotloggedin();
 
-if (!is_empty($VARS['id'])) {
-    if ($database->has('accounts', ['uid' => $VARS['id']])) {
-        $userdata = $database->select('accounts', ['[>]accttypes' => ['accttype' => 'typeid']], [
-                    'uid',
-                    'username',
-                    'realname',
-                    'email'
-                        ], [
-                    'uid' => $VARS['id']
-                ])[0];
-    } else {
+if (!empty($VARS['id']) && preg_match("/[0-9]+/", $VARS['id'])) {
+    $user = new User($VARS['id']);
+    if (!$user->exists()) {
         // user id is invalid
         header('Location: app.php?page=users&msg=user_not_exists');
         die();
@@ -32,23 +24,23 @@ if (!is_empty($VARS['id'])) {
     <div class="col-12 col-sm-6 col-sm-offset-3">
         <div class="card border-red text-center">
             <h3 class="card-header text-red">
-                <?php lang("delete user") ?>
+                <?php $Strings->get("delete user") ?>
             </h3>
             <div class="card-body">
                 <p><i class="fas fa-exclamation-triangle fa-10x"></i></p>
-                <h4><?php lang("really delete user") ?></h4>
+                <h4><?php $Strings->get("really delete user") ?></h4>
                 <div class="list-group">
                     <div class="list-group-item">
-                        <i class="fas fa-fw fa-user"></i> <?php echo $userdata['realname']; ?>
+                        <i class="fas fa-fw fa-user"></i> <?php echo $user->getName(); ?>
                     </div>
                     <div class="list-group-item">
-                        <i class="fas fa-fw fa-id-badge"></i> <?php echo $userdata['username']; ?>
+                        <i class="fas fa-fw fa-id-badge"></i> <?php echo $user->getUsername(); ?>
                     </div>
                     <?php
-                    if (!is_empty($userdata['email'])) {
+                    if (!empty($user->getEmail())) {
                         ?>
                         <div class="list-group-item">
-                            <i class="fas fa-fw fa-envelope"></i> <?php echo $userdata['email']; ?>
+                            <i class="fas fa-fw fa-envelope"></i> <?php echo $user->getEmail(); ?>
                         </div>
                         <?php
                     }
@@ -56,8 +48,8 @@ if (!is_empty($VARS['id'])) {
                 </div>
             </div>
             <div class="card-footer d-flex">
-                <a href="app.php?page=users" class="btn btn-primary mr-auto"><i class="fas fa-arrow-left"></i> <?php lang('cancel'); ?></a>
-                <a href="action.php?action=deleteuser&source=users&id=<?php echo htmlspecialchars($VARS['id']); ?>" class="btn btn-danger"><i class="fas fa-times"></i> <?php lang('delete'); ?></a>
+                <a href="app.php?page=users" class="btn btn-primary mr-auto"><i class="fas fa-arrow-left"></i> <?php $Strings->get('cancel'); ?></a>
+                <a href="action.php?action=deleteuser&source=users&id=<?php echo $user->getUID(); ?>" class="btn btn-danger"><i class="fas fa-times"></i> <?php $Strings->get('delete'); ?></a>
             </div>
         </div>
     </div>

@@ -34,7 +34,7 @@ switch ($VARS['order'][0]['column']) {
 }
 
 // search
-if (!is_empty($VARS['search']['value'])) {
+if (!empty($VARS['search']['value'])) {
     $filter = true;
     $wherenolimit = [
         "OR" => [
@@ -76,7 +76,7 @@ if ($filter) {
 }
 $out['recordsFiltered'] = $recordsFiltered;
 for ($i = 0; $i < count($data); $i++) {
-    $data[$i]["delbtn"] = '<a class="btn btn-danger btn-xs" href="app.php?page=delpermission&uid=' . $data[$i]['uid'] . '&pid=' . $data[$i]['permid'] . '"><i class="fa fa-trash"></i> ' . lang("delete", false) . '</a>';
+    $data[$i]["delbtn"] = '<a class="btn btn-danger btn-xs" href="app.php?page=delpermission&uid=' . $data[$i]['uid'] . '&pid=' . $data[$i]['permid'] . '"><i class="fa fa-trash"></i> ' . $Strings->get("delete", false) . '</a>';
 }
 $out['perms'] = $data;
 

@@ -14,41 +14,20 @@ if (count(get_included_files()) == 1) {
 
 require_once __DIR__ . "/../required.php";
 
-use League\Csv\Writer;
-use League\Csv\HTMLConverter;
-use odsPhpGenerator\ods;
-use odsPhpGenerator\odsTable;
-use odsPhpGenerator\odsTableRow;
-use odsPhpGenerator\odsTableColumn;
-use odsPhpGenerator\odsTableCellString;
-use odsPhpGenerator\odsStyleTableColumn;
-use odsPhpGenerator\odsStyleTableCell;
-
-// Allow access with a download code, for mobile app and stuff
-$date = date("Y-m-d H:i:s");
-if (isset($VARS['code']) && LOADED) {
-    if (!$database2->has('report_access_codes', ["AND" => ['code' => $VARS['code'], 'expires[>]' => $date]])) {
-        dieifnotloggedin();
-    }
-} else {
-    dieifnotloggedin();
-}
-
-// Delete old DB entries
-$database2->delete('report_access_codes', ['expires[<=]' => $date]);
+dieifnotloggedin();
 
 if (LOADED) {
     if (isset($VARS['type']) && isset($VARS['format'])) {
         generateReport($VARS['type'], $VARS['format']);
         die();
     } else {
-        lang("invalid parameters");
+        $Strings->get("invalid parameters");
         die();
     }
 }
 
-function getUserReport() {
-    global $database;
+function getUserReport(): Report {
+    global $database, $Strings;
     $users = $database->select(
             "accounts", [
         "[>]acctstatus" => ["acctstatus" => "statusid"],
@@ -57,10 +36,21 @@ function getUserReport() {
         "uid", "username", "realname", "email", "statuscode", "typecode", "authsecret"
             ]
     );
-    $header = [lang("uid", false), lang("username", false), lang("name", false), lang("email", false), lang("status", false), lang("type", false), lang("2fa", false)];
-    $out = [$header];
+
+    $report = new Report($Strings->get("Users", false));
+
+    $report->setHeader([
+        $Strings->get("uid", false),
+        $Strings->get("username", false),
+        $Strings->get("name", false),
+        $Strings->get("email", false),
+        $Strings->get("status", false),
+        $Strings->get("type", false),
+        $Strings->get("2fa", false)
+        ]);
+
     for ($i = 0; $i < count($users); $i++) {
-        $out[] = [
+        $report->addDataRow([
             $users[$i]["uid"],
             $users[$i]["username"],
             $users[$i]["realname"],
@@ -68,13 +58,13 @@ function getUserReport() {
             $users[$i]["statuscode"],
             $users[$i]["typecode"],
             is_null($users[$i]["authsecret"]) ? "0" : "1"
-        ];
+        ]);
     }
-    return $out;
+    return $report;
 }
 
 function getGroupReport() {
-    global $database;
+    global $database, $Strings;
     $groups = $database->select('assigned_groups', [
         "[>]groups" => ['groupid'],
         "[>]accounts" => ['uid']
@@ -85,10 +75,10 @@ function getGroupReport() {
         'groupname',
         'groupid'
     ]);
-    $header = [lang("group id", false), lang("group name", false), lang("uid", false), lang("username", false), lang("name", false)];
-    $out = [$header];
+    $header = [$Strings->get("group id", false), $Strings->get("group name", false), $Strings->get("uid", false), $Strings->get("username", false), $Strings->get("name", false)];
+    $data = [];
     for ($i = 0; $i < count($groups); $i++) {
-        $out[] = [
+        $data[] = [
             $groups[$i]["groupid"],
             $groups[$i]["groupname"],
             $groups[$i]["uid"],
@@ -96,11 +86,11 @@ function getGroupReport() {
             $groups[$i]["realname"]
         ];
     }
-    return $out;
+    return new Report($Strings->get("Groups", false), $header, $data);
 }
 
 function getManagerReport() {
-    global $database;
+    global $database, $Strings;
     $managers = $database->select('managers', [
         "[>]accounts (manager)" => ['managerid' => 'uid'],
         "[>]accounts (employee)" => ['employeeid' => 'uid']
@@ -112,21 +102,21 @@ function getManagerReport() {
         'manager.realname (managername)',
         'employee.realname (employeename)',
     ]);
-    $header = [lang("manager name", false), lang("manager username", false), lang("employee name", false), lang("employee username", false)];
-    $out = [$header];
+    $header = [$Strings->get("manager name", false), $Strings->get("manager username", false), $Strings->get("employee name", false), $Strings->get("employee username", false)];
+    $data = [];
     for ($i = 0; $i < count($managers); $i++) {
-        $out[] = [
+        $data[] = [
             $managers[$i]["managername"],
             $managers[$i]["manageruser"],
             $managers[$i]["employeename"],
             $managers[$i]["employeeuser"]
         ];
     }
-    return $out;
+    return new Report($Strings->get("Managers", false), $header, $data);
 }
 
 function getPermissionReport() {
-    global $database;
+    global $database, $Strings;
     $permissions = $database->select('assigned_permissions', [
         "[>]accounts" => ['uid' => 'uid'],
         "[>]permissions" => ['permid' => 'permid']
@@ -137,10 +127,10 @@ function getPermissionReport() {
         'permissions.permid',
         'permcode'
     ]);
-    $header = [lang("uid", false), lang("username", false), lang("name", false), lang("permission", false), lang("permission id", false)];
-    $out = [$header];
+    $header = [$Strings->get("uid", false), $Strings->get("username", false), $Strings->get("name", false), $Strings->get("permission", false), $Strings->get("permission id", false)];
+    $data = [];
     for ($i = 0; $i < count($permissions); $i++) {
-        $out[] = [
+        $data[] = [
             $permissions[$i]["uid"],
             $permissions[$i]["username"],
             $permissions[$i]["realname"],
@@ -148,11 +138,11 @@ function getPermissionReport() {
             $permissions[$i]["permid"],
         ];
     }
-    return $out;
+    return new Report($Strings->get("Permissions", false), $header, $data);
 }
 
 function getSecurityReport() {
-    global $database;
+    global $database, $Strings;
     $log = $database->select('authlog', [
         "[>]logtypes" => ['logtype'],
         "[>]accounts" => ['uid']
@@ -165,10 +155,10 @@ function getSecurityReport() {
         'ip',
         'otherdata'
     ]);
-    $header = [lang("logtime", false), lang("logtype", false), lang("ip address", false), lang("uid", false), lang("username", false), lang("name", false), lang("other data", false)];
-    $out = [$header];
+    $header = [$Strings->get("logtime", false), $Strings->get("logtype", false), $Strings->get("ip address", false), $Strings->get("uid", false), $Strings->get("username", false), $Strings->get("name", false), $Strings->get("other data", false)];
+    $data = [];
     for ($i = 0; $i < count($log); $i++) {
-        $out[] = [
+        $data[] = [
             $log[$i]["logtime"],
             $log[$i]["typename"],
             $log[$i]["ip"],
@@ -178,10 +168,10 @@ function getSecurityReport() {
             $log[$i]["otherdata"]
         ];
     }
-    return $out;
+    return new Report($Strings->get("Security", false), $header, $data);
 }
 
-function getReportData($type) {
+function getReport($type): Report {
     switch ($type) {
         case "users":
             return getUserReport();
@@ -199,93 +189,11 @@ function getReportData($type) {
             return getSecurityReport();
             break;
         default:
-            return [["error"]];
+            return new Report("error", ["ERROR"], ["Invalid report type."]);
     }
-}
-
-function dataToCSV($data, $name = "report") {
-    $csv = Writer::createFromString('');
-    $csv->insertAll($data);
-    header('Content-type: text/csv');
-    header('Content-Disposition: attachment; filename="' . $name . "_" . date("Y-m-d_Hi") . ".csv" . '"');
-    echo $csv;
-    die();
-}
-
-function dataToODS($data, $name = "report") {
-    $ods = new ods();
-    $styleColumn = new odsStyleTableColumn();
-    $styleColumn->setUseOptimalColumnWidth(true);
-    $headerstyle = new odsStyleTableCell();
-    $headerstyle->setFontWeight("bold");
-    $table = new odsTable($name);
-
-    for ($i = 0; $i < count($data[0]); $i++) {
-        $table->addTableColumn(new odsTableColumn($styleColumn));
-    }
-
-    $rowid = 0;
-    foreach ($data as $datarow) {
-        $row = new odsTableRow();
-        foreach ($datarow as $cell) {
-            if ($rowid == 0) {
-                $row->addCell(new odsTableCellString($cell, $headerstyle));
-            } else {
-                $row->addCell(new odsTableCellString($cell));
-            }
-        }
-        $table->addRow($row);
-        $rowid++;
-    }
-    $ods->addTable($table);
-    $ods->downloadOdsFile($name . "_" . date("Y-m-d_Hi") . ".ods");
-}
-
-function dataToHTML($data, $name = "report") {
-    global $SECURE_NONCE;
-    // HTML exporter doesn't like null values
-    for ($i = 0; $i < count($data); $i++) {
-        for ($j = 0; $j < count($data[$i]); $j++) {
-            if (is_null($data[$i][$j])) {
-                $data[$i][$j] = '';
-            }
-        }
-    }
-    header('Content-type: text/html');
-    $converter = new HTMLConverter();
-    $out = "<!DOCTYPE html>\n"
-            . "<meta charset=\"utf-8\">\n"
-            . "<meta name=\"viewport\" content=\"width=device-width\">\n"
-            . "<title>" . $name . "_" . date("Y-m-d_Hi") . "</title>\n"
-            . <<<STYLE
-<style nonce="$SECURE_NONCE">
-    .table-csv-data {
-        border-collapse: collapse;
-    }
-    .table-csv-data tr:first-child {
-        font-weight: bold;
-    }
-    .table-csv-data tr td {
-        border: 1px solid black;
-    }
-</style>
-STYLE
-            . $converter->convert($data);
-    echo $out;
 }
 
 function generateReport($type, $format) {
-    $data = getReportData($type);
-    switch ($format) {
-        case "ods":
-            dataToODS($data, $type);
-            break;
-        case "html":
-            dataToHTML($data, $type);
-            break;
-        case "csv":
-        default:
-            echo dataToCSV($data, $type);
-            break;
-    }
+    $report = getReport($type);
+    $report->output($format);
 }

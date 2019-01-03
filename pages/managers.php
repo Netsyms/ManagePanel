@@ -11,10 +11,10 @@ redirectifnotloggedin();
 $assigned = [];
 $employees = false;
 $user = "";
-if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
+if (!empty($VARS['man']) && $database->has('accounts', ['username' => $VARS['man']])) {
+
     $user = $VARS['man'];
-    require_once __DIR__ . "/../lib/userinfo.php";
-    $uid = getUserByUsername($user)['uid'];
+    $uid = User::byUsername($user)->getUID();
     $assigned = $database->select('managers', ["[>]accounts" => ["employeeid" => "uid"]], 'username', ['managerid' => $uid]);
     $employees = true;
 }
@@ -24,21 +24,37 @@ if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
     <?php if ($employees !== false) { ?>
         <form role="form" action="action.php" method="POST">
         <?php } ?>
-        <h4 class="card-header text-brown"><?php lang("select a manager to view or edit employees"); ?></h4>
+        <h4 class="card-header text-brown"><?php $Strings->get("select a manager to view or edit employees"); ?></h4>
         <div class="card-body">
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
-                        <label for="manager-box"><i class="fas fa-id-card"></i> <?php lang("manager"); ?></label><br />
+                        <label for="manager-box"><i class="fas fa-id-card"></i> <?php $Strings->get("manager"); ?></label><br />
                         <div class="input-group">
-                            <input type="text"<?php if ($employees === false) { ?> id="manager-box"<?php } ?> class="form-control" value="<?php echo $user ?>" name="manager" placeholder="<?php lang("type to select a manager"); ?>" <?php
-                            if ($employees !== false) {
-                                echo "readonly";
+                            <?php
+                            if ($employees === false) {
+                                ?>
+                                <select class="form-control" id="manager-box" name="manager">
+                                    <option></option>
+                                    <?php
+                                    $allusers = $database->select("accounts", "uid", ["deleted" => 0]);
+                                    foreach ($allusers as $user) {
+                                        $u = new User($user);
+                                        echo '<option value="' . htmlentities($u->getUsername()) . '">' . htmlentities($u->getName()) . ' (' . htmlentities($u->getUsername()) . ')</option>';
+                                    }
+                                    ?>
+                                </select>
+                                <?php
+                            } else {
+                                ?>
+                                <input type="text" class="form-control" name="manager" readonly="readonly" value="<?php echo htmlentities($user); ?>" />
+                                <?php
                             }
-                            ?>/>
+                            ?>
+
                             <div class="input-group-append">
                                 <?php if ($employees === false) { ?>
-                                    <button class="btn btn-default" type="button" id="selectmanagerbtn"><i class="fa fa-chevron-right"></i> <?php lang("next") ?></button>
+                                    <button class="btn btn-default" type="button" id="selectmanagerbtn"><i class="fa fa-chevron-right"></i> <?php $Strings->get("next") ?></button>
                                 <?php } ?>
                             </div>
                         </div>
@@ -49,11 +65,20 @@ if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
                     ?>
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="people-box"><i class="fa fa-user"></i> <?php lang("employees"); ?></label><br />
+                            <label for="people-box"><i class="fa fa-user"></i> <?php $Strings->get("employees"); ?></label><br />
                             <div class="input-group">
-                                <input type="text" id="people-box" class="form-control" placeholder="<?php lang("type to add a person") ?>" />
+                                <select class="form-control" id="people-box">
+                                    <option></option>
+                                    <?php
+                                    $allusers = $database->select("accounts", "uid", ["deleted" => 0]);
+                                    foreach ($allusers as $user) {
+                                        $u = new User($user);
+                                        echo '<option value="' . htmlentities($u->getUsername()) . '">' . htmlentities($u->getName()) . ' (' . htmlentities($u->getUsername()) . ')</option>';
+                                    }
+                                    ?>
+                                </select>
                                 <div class="input-group-append">
-                                    <button class="btn btn-default" type="button" id="addpersonbtn"><i class="fa fa-plus"></i> <?php lang("add") ?></button>
+                                    <button class="btn btn-default" type="button" id="addpersonbtn"><i class="fa fa-plus"></i> <?php $Strings->get("add") ?></button>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +108,7 @@ if ($VARS['man'] && $database->has('accounts', ['username' => $VARS['man']])) {
 
         <?php if ($employees !== false) { ?>
             <div class="card-footer d-flex">
-                <button type="submit" class="btn btn-success ml-auto" id="save-btn"><i class="fas fa-save"></i> <?php lang("save"); ?></button>
+                <button type="submit" class="btn btn-success ml-auto" id="save-btn"><i class="fas fa-save"></i> <?php $Strings->get("save"); ?></button>
             </div>
         </form>
     <?php } ?>

@@ -8,14 +8,12 @@
  * Make things happen when buttons are pressed and forms submitted.
  */
 require_once __DIR__ . "/required.php";
-require_once __DIR__ . "/lib/login.php";
-require_once __DIR__ . "/lib/authlog.php";
 
 if ($VARS['action'] !== "signout") {
     dieifnotloggedin();
 }
 
-if (account_has_permission($_SESSION['username'], "ADMIN") == FALSE) {
+if ((new User($_SESSION['uid']))->hasPermission("ADMIN") == FALSE) {
     die("You don't have permission to be here.");
 }
 
@@ -44,7 +42,7 @@ function returnToSender($msg, $arg = "", $additional = []) {
 
 switch ($VARS['action']) {
     case "edituser":
-        if (is_empty($VARS['id'])) {
+        if (empty($VARS['id'])) {
             $insert = true;
         } else {
             if ($database->has('accounts', ['uid' => $VARS['id']])) {
@@ -53,7 +51,7 @@ switch ($VARS['action']) {
                 returnToSender("invalid_userid");
             }
         }
-        if (is_empty($VARS['name']) || is_empty($VARS['username']) || is_empty($VARS['status'])) {
+        if (empty($VARS['name']) || empty($VARS['username']) || empty($VARS['status'])) {
             returnToSender('invalid_parameters');
         }
 
@@ -69,7 +67,7 @@ switch ($VARS['action']) {
             'deleted' => 0
         ];
 
-        if (!is_empty($VARS['pass'])) {
+        if (!empty($VARS['pass'])) {
             $data['password'] = password_hash($VARS['pass'], PASSWORD_BCRYPT);
         }
 
@@ -78,11 +76,11 @@ switch ($VARS['action']) {
             $data['phone2'] = "";
             $data['accttype'] = 1;
             $database->insert('accounts', $data);
-            insertAuthLog(17, $_SESSION['uid'], $data['username'] . ", " . $data['realname'] . ", " . $data['email'] . ", " . $data['acctstatus']);
+            Log::insert(LogType::USER_ADDED, $_SESSION['uid'], $data['username'] . ", " . $data['realname'] . ", " . $data['email'] . ", " . $data['acctstatus']);
         } else {
             $olddata = $database->select('accounts', '*', ['uid' => $VARS['id']])[0];
             $database->update('accounts', $data, ['uid' => $VARS['id']]);
-            insertAuthLog(18, $_SESSION['uid'], "OLD: " . $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus'] . "; NEW: " . $data['username'] . ", " . $data['realname'] . ", " . $data['email'] . ", " . $data['acctstatus']);
+            Log::insert(LogType::USER_EDITED, $_SESSION['uid'], "OLD: " . $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus'] . "; NEW: " . $data['username'] . ", " . $data['realname'] . ", " . $data['email'] . ", " . $data['acctstatus']);
         }
 
         returnToSender("user_saved");
@@ -97,7 +95,7 @@ switch ($VARS['action']) {
             // we will flag it as deleted and set the status to LOCKED_OR_DISABLED.
             $database->update('accounts', ['acctstatus' => 2, 'deleted' => 1], ['uid' => $VARS['id']]);
         }
-        insertAuthLog(16, $_SESSION['uid'], $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus']);
+        Log::insert(LogType::USER_REMOVED, $_SESSION['uid'], $olddata['username'] . ", " . $olddata['realname'] . ", " . $olddata['email'] . ", " . $olddata['acctstatus']);
         returnToSender("user_deleted");
     case "rmtotp":
         if ($database->has('accounts', ['uid' => $VARS['id']]) !== TRUE) {
@@ -105,28 +103,27 @@ switch ($VARS['action']) {
         }
         $u = $database->get('accounts', 'username', ['uid' => $VARS['id']]);
         $database->update('accounts', ["authsecret" => null], ['uid' => $VARS['id']]);
-        insertAuthLog(10, $_SESSION['uid'], $u);
+        Log::insert(LogType::REMOVED_2FA, $_SESSION['uid'], $u);
         returnToSender("2fa_removed");
     case "clearlog":
         $rows = $database->count('authlog');
         $database->delete('authlog', []);
-        insertAuthLog(15, $_SESSION['uid'], lang2("removed n entries", ['n' => $rows], false));
+        Log::insert(LogType::LOG_CLEARED, $_SESSION['uid'], $Strings->build("removed n entries", ['n' => $rows], false));
         returnToSender("log_cleared");
     case "editmanager":
-        require_once __DIR__ . "/lib/userinfo.php";
         if (!$database->has('accounts', ['username' => $VARS['manager']])) {
             returnToSender("invalid_manager");
         }
-        $manager = getUserByUsername($VARS['manager'])['uid'];
+        $manager = User::byUsername($VARS['manager'])->getUID();
         $already_assigned = $database->select('managers', 'employeeid', ['managerid' => $manager]);
 
         foreach ($VARS['employees'] as $u) {
-            if (!user_exists($u)) {
-                returnToSender("user_not_exists", htmlentities($u));
+            $emp = User::byUsername($u);
+            if (!$emp->exists()) {
+                returnToSender("user_not_exists", htmlentities($emp->getUsername()));
             }
-            $uid = getUserByUsername($u)['uid'];
-            $database->insert('managers', ['employeeid' => $uid, 'managerid' => $manager]);
-            $already_assigned = array_diff($already_assigned, [$uid]); // Remove user from old list
+            $database->insert('managers', ['employeeid' => $emp->getUID(), 'managerid' => $manager]);
+            $already_assigned = array_diff($already_assigned, [$emp->getUID()]); // Remove user from old list
         }
         foreach ($already_assigned as $uid) {
             $database->delete('managers', ["AND" => ['employeeid' => $uid, 'managerid' => $manager]]);
@@ -198,14 +195,14 @@ switch ($VARS['action']) {
         returnToSender("permission_deleted");
     case "autocomplete_user":
         header("Content-Type: application/json");
-        if (is_empty($VARS['q']) || strlen($VARS['q']) < 3) {
+        if (empty($VARS['q']) || strlen($VARS['q']) < 3) {
             exit(json_encode([]));
         }
         $data = $database->select('accounts', ['uid', 'username', 'realname (name)'], ["OR" => ['username[~]' => $VARS['q'], 'realname[~]' => $VARS['q']], "LIMIT" => 10]);
         exit(json_encode($data));
     case "autocomplete_permission":
         header("Content-Type: application/json");
-        if (is_empty($VARS['q'])) {
+        if (empty($VARS['q'])) {
             exit(json_encode([]));
         }
         $data = $database->select('permissions', ['permcode (name)', 'perminfo (info)'], ["OR" => ['permcode[~]' => $VARS['q'], 'perminfo[~]' => $VARS['q']], "LIMIT" => 10]);
@@ -217,14 +214,13 @@ switch ($VARS['action']) {
         $gid = $VARS['gid'];
         $already_assigned = $database->select('assigned_groups', 'uid', ['groupid' => $gid]);
 
-        require_once __DIR__ . "/lib/userinfo.php";
         foreach ($VARS['users'] as $u) {
-            if (!user_exists($u)) {
-                returnToSender("user_not_exists", htmlentities($u));
+            $user = User::byUsername($u);
+            if (!$user->exists()) {
+                returnToSender("user_not_exists", htmlentities($user->getUsername()));
             }
-            $uid = getUserByUsername($u)['uid'];
-            $database->insert('assigned_groups', ['groupid' => $gid, 'uid' => $uid]);
-            $already_assigned = array_diff($already_assigned, [$uid]); // Remove user from old list
+            $database->insert('assigned_groups', ['groupid' => $gid, 'uid' => $user->getUID()]);
+            $already_assigned = array_diff($already_assigned, [$user->getUID()]); // Remove user from old list
         }
         foreach ($already_assigned as $uid) {
             $database->delete('assigned_groups', ["AND" => ['uid' => $uid, 'groupid' => $gid]]);
@@ -251,7 +247,7 @@ switch ($VARS['action']) {
         break;
     case "signout":
         session_destroy();
-        header('Location: index.php');
+        header('Location: index.php?logout=1');
         die("Logged out.");
     default:
         die("Invalid action");

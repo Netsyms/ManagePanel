@@ -11,15 +11,15 @@ redirectifnotloggedin();
     <div class="col-12 col-sm-6 col-sm-offset-3">
         <div class="card border-red text-center">
             <h3 class="card-header text-red">
-                <?php lang("clear log") ?>
+                <?php $Strings->get("clear log") ?>
             </h3>
             <div class="card-body">
                 <p><i class="fas fa-exclamation-triangle fa-10x"></i></p>
-                <h4><?php lang("really clear log") ?></h4>
+                <h4><?php $Strings->get("really clear log") ?></h4>
             </div>
             <div class="card-footer d-flex">
-                <a href="app.php?page=authlog" class="btn btn-primary mr-auto"><i class="fa fa-arrow-left"></i> <?php lang('cancel'); ?></a>
-                <a href="action.php?action=clearlog&source=authlog" class="btn btn-danger"><i class="fa fa-times"></i> <?php lang('delete'); ?></a>
+                <a href="app.php?page=authlog" class="btn btn-primary mr-auto"><i class="fa fa-arrow-left"></i> <?php $Strings->get('cancel'); ?></a>
+                <a href="action.php?action=clearlog&source=authlog" class="btn btn-danger"><i class="fa fa-times"></i> <?php $Strings->get('delete'); ?></a>
             </div>
         </div>
     </div>

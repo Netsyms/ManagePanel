@@ -1,4 +1,4 @@
-Copyright (c) 2018 Netsyms Technologies.
+Copyright (c) 2018-2019 Netsyms Technologies.
 
 If you modify and redistribute this project, you must replace the branding
 assets with your own.

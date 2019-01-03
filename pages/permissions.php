@@ -10,61 +10,50 @@ redirectifnotloggedin();
 
 $perms = [];
 $permissions = false;
-$user = "";
-if ($VARS['user'] && $database->has('accounts', ['username' => $VARS['user']])) {
-    $user = $VARS['user'];
-    require_once __DIR__ . "/../lib/userinfo.php";
-    $uid = getUserByUsername($user)['uid'];
-    $perms = $database->select('assigned_permissions', ["[>]permissions" => ["permid" => "permid"]], ['permissions.permid', 'permcode', 'perminfo'], ['uid' => $uid]);
-    $permissions = true;
+$user = null;
+if (!empty($VARS['user'])) {
+    $user = User::byUsername($VARS['user']);
+    if ($user->exists()) {
+        $perms = $database->select('assigned_permissions', ["[>]permissions" => ["permid" => "permid"]], ['permissions.permid', 'permcode', 'perminfo'], ['uid' => $user->getUID()]);
+        $permissions = true;
+    }
 }
 ?>
 <div class="card border-brown">
     <?php if ($permissions !== false) { ?>
         <form role="form" action="action.php" method="POST">
         <?php } ?>
-        <h4 class="card-header text-brown"><?php lang("select a user to view or edit permissions"); ?></h4>
+        <h4 class="card-header text-brown"><?php $Strings->get("select a user to view or edit permissions"); ?></h4>
         <div class="card-body">
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="form-group">
-                        <label for="user-box"><i class="fas fa-id-card"></i> <?php lang("user"); ?></label><br />
+                        <label for="user-box"><i class="fas fa-id-card"></i> <?php $Strings->get("user"); ?></label><br />
                         <div class="input-group">
                             <?php
-                            if ($database->count('accounts', ['deleted[!]' => 1]) > 30) {
+                            if ($permissions === false) {
                                 ?>
-                                <input type="text"<?php if ($permissions === false) { ?>id="user-box"<?php } ?> class="form-control" value="<?php echo $user ?>" name="user" placeholder="<?php lang("type to select a user"); ?>" <?php
-                                if ($permissions !== false) {
-                                    echo "readonly";
-                                }
-                                ?>/>
-                                       <?php
-                                   } else {
-                                       if ($permissions === false) {
-                                           ?>
-                                    <select id="user-box" class="form-control" name="user">
-                                        <option value=""><?php lang("Choose a user") ?></option>
-                                        <?php
-                                        $allusers = $database->select('accounts', ['username', 'realname'], ['deleted[!]' => 1, 'ORDER' => ['realname' => 'ASC']]);
-                                        foreach ($allusers as $u) {
-                                            echo "<option value=\"$u[username]\">$u[realname] ($u[username])</option>\n";
-                                        }
-                                        ?>
-                                    </select>
+                                <select id="user-box" class="form-control" name="user">
+                                    <option value=""><?php $Strings->get("Choose a user") ?></option>
                                     <?php
-                                } else {
-                                    $realname = $database->get('accounts', 'realname', ['username' => $user]);
+                                    $allusers = $database->select('accounts', ['username', 'realname'], ['deleted[!]' => 1, 'ORDER' => ['realname' => 'ASC']]);
+                                    foreach ($allusers as $u) {
+                                        echo "<option value=\"$u[username]\">$u[realname] ($u[username])</option>\n";
+                                    }
                                     ?>
-                                    <input type="text" class="form-control" value="<?php echo "$realname ($user)" ?>" readonly disabled />
-                                    <input type="hidden" id="user-box" name="user" value="<?php echo $user ?>" />
-                                    <?php
-                                }
+                                </select>
+                                <?php
+                            } else {
+                                ?>
+                                <input type="text" class="form-control" value="<?php echo $user->getName() . "(" . $user->getUsername() . ")" ?>" readonly disabled />
+                                <input type="hidden" id="user-box" name="user" value="<?php echo $user->getUsername() ?>" />
+                                <?php
                             }
                             ?>
                             <div class = "input-group-append">
                                 <?php if ($permissions === false) {
                                     ?>
-                                    <button class="btn btn-default" type="button" id="selectuserbtn"><i class="fa fa-chevron-right"></i> <?php lang("next") ?></button>
+                                    <button class="btn btn-default" type="button" id="selectuserbtn"><i class="fa fa-chevron-right"></i> <?php $Strings->get("next") ?></button>
                                 <?php } ?>
                             </div>
                         </div>
@@ -75,10 +64,10 @@ if ($VARS['user'] && $database->has('accounts', ['username' => $VARS['user']])) 
                     ?>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
-                            <label for="perms-box"><i class="fas fa-key"></i> <?php lang("permissions"); ?></label><br />
+                            <label for="perms-box"><i class="fas fa-key"></i> <?php $Strings->get("permissions"); ?></label><br />
                             <div class="input-group">
                                 <select id="perms-box" class="form-control" data-ac="false">
-                                    <option value="" selected><?php lang("Choose a permission") ?></option>
+                                    <option value="" selected><?php $Strings->get("Choose a permission") ?></option>
                                     <?php
                                     $allpermissions = $database->select('permissions', ['permid', 'permcode', 'perminfo']);
                                     foreach ($allpermissions as $p) {
@@ -89,7 +78,7 @@ if ($VARS['user'] && $database->has('accounts', ['username' => $VARS['user']])) 
                                     ?>
                                 </select>
                                 <div class="input-group-append">
-                                    <button class="btn btn-default" type="button" id="addpermbtn"><i class="fa fa-plus"></i> <?php lang("add") ?></button>
+                                    <button class="btn btn-default" type="button" id="addpermbtn"><i class="fa fa-plus"></i> <?php $Strings->get("add") ?></button>
                                 </div>
                             </div>
                         </div>
@@ -120,7 +109,7 @@ if ($VARS['user'] && $database->has('accounts', ['username' => $VARS['user']])) 
 
         <?php if ($permissions !== false) { ?>
             <div class="card-footer d-flex">
-                <button type="submit" class="btn btn-success ml-auto" id="save-btn"><i class="fas fa-save"></i> <?php lang("save"); ?></button>
+                <button type="submit" class="btn btn-success ml-auto" id="save-btn"><i class="fas fa-save"></i> <?php $Strings->get("save"); ?></button>
             </div>
         </form>
     <?php } ?>

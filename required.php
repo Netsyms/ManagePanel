@@ -32,7 +32,6 @@ session_start(); // stick some cookies in it
 // renew session cookie
 setcookie(session_name(), session_id(), time() + $session_length, "/", false, false);
 
-$captcha_server = (CAPTCHA_ENABLED === true ? preg_replace("/http(s)?:\/\//", "", CAPTCHA_SERVER) : "");
 if ($_SESSION['mobile'] === TRUE) {
     header("Content-Security-Policy: "
             . "default-src 'self';"
@@ -42,8 +41,8 @@ if ($_SESSION['mobile'] === TRUE) {
             . "frame-src 'none'; "
             . "font-src 'self'; "
             . "connect-src *; "
-            . "style-src 'self' 'unsafe-inline' $captcha_server; "
-            . "script-src 'self' 'unsafe-inline' $captcha_server");
+            . "style-src 'self' 'unsafe-inline'; "
+            . "script-src 'self' 'unsafe-inline'");
 } else {
     header("Content-Security-Policy: "
             . "default-src 'self';"
@@ -53,8 +52,8 @@ if ($_SESSION['mobile'] === TRUE) {
             . "frame-src 'none'; "
             . "font-src 'self'; "
             . "connect-src *; "
-            . "style-src 'self' 'nonce-$SECURE_NONCE' $captcha_server; "
-            . "script-src 'self' 'nonce-$SECURE_NONCE' $captcha_server");
+            . "style-src 'self' 'nonce-$SECURE_NONCE'; "
+            . "script-src 'self' 'nonce-$SECURE_NONCE'");
 }
 
 //
@@ -62,9 +61,14 @@ if ($_SESSION['mobile'] === TRUE) {
 require __DIR__ . '/vendor/autoload.php';
 
 // List of alert messages
-require __DIR__ . '/lang/messages.php';
-// text strings (i18n)
-require __DIR__ . '/lang/' . LANGUAGE . ".php";
+require __DIR__ . '/langs/messages.php';
+
+$libs = glob(__DIR__ . "/lib/*.lib.php");
+foreach ($libs as $lib) {
+    require_once $lib;
+}
+
+$Strings = new Strings($SETTINGS['language']);
 
 /**
  * Kill off the running process and spit out an error message
@@ -88,7 +92,7 @@ function sendError($error) {
             . "<p>" . htmlspecialchars($error) . "</p>");
 }
 
-date_default_timezone_set(TIMEZONE);
+date_default_timezone_set($SETTINGS['timezone']);
 
 // Database settings
 // Also inits database and stuff
@@ -97,12 +101,12 @@ use Medoo\Medoo;
 $database;
 try {
     $database = new Medoo([
-        'database_type' => DB_TYPE,
-        'database_name' => DB_NAME,
-        'server' => DB_SERVER,
-        'username' => DB_USER,
-        'password' => DB_PASS,
-        'charset' => DB_CHARSET
+        'database_type' => $SETTINGS['database']['type'],
+        'database_name' => $SETTINGS['database']['name'],
+        'server' => $SETTINGS['database']['server'],
+        'username' => $SETTINGS['database']['user'],
+        'password' => $SETTINGS['database']['password'],
+        'charset' => $SETTINGS['database']['charset']
     ]);
 } catch (Exception $ex) {
     //header('HTTP/1.1 500 Internal Server Error');
@@ -112,19 +116,19 @@ try {
 $database2;
 try {
     $database2 = new Medoo([
-        'database_type' => DB2_TYPE,
-        'database_name' => DB2_NAME,
-        'server' => DB2_SERVER,
-        'username' => DB2_USER,
-        'password' => DB2_PASS,
-        'charset' => DB2_CHARSET
+         'database_type' => $SETTINGS['database2']['type'],
+        'database_name' => $SETTINGS['database2']['name'],
+        'server' => $SETTINGS['database2']['server'],
+        'username' => $SETTINGS['database2']['user'],
+        'password' => $SETTINGS['database2']['password'],
+        'charset' => $SETTINGS['database2']['charset']
     ]);
 } catch (Exception $ex) {
     //header('HTTP/1.1 500 Internal Server Error');
     sendError("Database error 2.  Try again later.  $ex");
 }
 
-if (!DEBUG) {
+if (!$SETTINGS['debug']) {
     error_reporting(0);
 } else {
     error_reporting(E_ALL);
@@ -141,68 +145,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     define("GET", true);
 }
 
-/**
- * Checks if a string or whatever is empty.
- * @param $str The thingy to check
- * @return boolean True if it's empty or whatever.
- */
-function is_empty($str) {
-    return (is_null($str) || !isset($str) || $str == '');
-}
-
-/**
- * I18N string getter.  If the key doesn't exist, outputs the key itself.
- * @param string $key I18N string key
- * @param boolean $echo whether to echo the result or return it (default echo)
- */
-function lang($key, $echo = true) {
-    if (array_key_exists($key, STRINGS)) {
-        $str = STRINGS[$key];
-    } else {
-        trigger_error("Language key \"$key\" does not exist in " . LANGUAGE, E_USER_WARNING);
-        $str = $key;
-    }
-
-    if ($echo) {
-        echo $str;
-    } else {
-        return $str;
-    }
-}
-
-/**
- * I18N string getter (with builder).    If the key doesn't exist, outputs the key itself.
- * @param string $key I18N string key
- * @param array $replace key-value array of replacements.
- * If the string value is "hello {abc}" and you give ["abc" => "123"], the
- * result will be "hello 123".
- * @param boolean $echo whether to echo the result or return it (default echo)
- */
-function lang2($key, $replace, $echo = true) {
-    if (array_key_exists($key, STRINGS)) {
-        $str = STRINGS[$key];
-    } else {
-        trigger_error("Language key \"$key\" does not exist in " . LANGUAGE, E_USER_WARNING);
-        $str = $key;
-    }
-
-    foreach ($replace as $find => $repl) {
-        $str = str_replace("{" . $find . "}", $repl, $str);
-    }
-
-    if ($echo) {
-        echo $str;
-    } else {
-        return $str;
-    }
-}
 
 function dieifnotloggedin() {
     if ($_SESSION['loggedin'] != true) {
-        die("You don't have permission to be here.");
-    }
-    require_once __DIR__ . "/lib/login.php";
-    if (account_has_permission($_SESSION['username'], "ADMIN") == FALSE) {
         die("You don't have permission to be here.");
     }
 }
@@ -224,46 +169,9 @@ function checkDBError($specials = []) {
     }
 }
 
-/*
- * http://stackoverflow.com/a/20075147
- */
-if (!function_exists('base_url')) {
-
-    function base_url($atRoot = FALSE, $atCore = FALSE, $parse = FALSE) {
-        if (isset($_SERVER['HTTP_HOST'])) {
-            $http = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off' ? 'https' : 'http';
-            $hostname = $_SERVER['HTTP_HOST'];
-            $dir = str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
-
-            $core = preg_split('@/@', str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(dirname(__FILE__))), NULL, PREG_SPLIT_NO_EMPTY);
-            $core = $core[0];
-
-            $tmplt = $atRoot ? ($atCore ? "%s://%s/%s/" : "%s://%s/") : ($atCore ? "%s://%s/%s/" : "%s://%s%s");
-            $end = $atRoot ? ($atCore ? $core : $hostname) : ($atCore ? $core : $dir);
-            $base_url = sprintf($tmplt, $http, $hostname, $end);
-        } else
-            $base_url = 'http://localhost/';
-
-        if ($parse) {
-            $base_url = parse_url($base_url);
-            if (isset($base_url['path']))
-                if ($base_url['path'] == '/')
-                    $base_url['path'] = '';
-        }
-
-        return $base_url;
-    }
-
-}
-
 function redirectIfNotLoggedIn() {
     if ($_SESSION['loggedin'] !== TRUE) {
-        header('Location: ./index.php');
+        header('Location: ' . $SETTINGS['url'] . '/index.php');
         die();
-    }
-    require_once __DIR__ . "/lib/login.php";
-    if (account_has_permission($_SESSION['username'], "ADMIN") == FALSE) {
-        header('Location: ./index.php');
-        die("You don't have permission to be here.");
     }
 }

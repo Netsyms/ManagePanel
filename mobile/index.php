@@ -14,8 +14,6 @@ $access_permission = "ADMIN";
 
 require __DIR__ . "/../required.php";
 
-require __DIR__ . "/../lib/login.php";
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
@@ -25,21 +23,7 @@ if ($VARS['action'] == "ping") {
 }
 
 function mobile_enabled() {
-    $client = new GuzzleHttp\Client();
-
-    $response = $client
-            ->request('POST', PORTAL_API, [
-        'form_params' => [
-            'key' => PORTAL_KEY,
-            'action' => "mobileenabled"
-        ]
-    ]);
-
-    if ($response->getStatusCode() > 299) {
-        return false;
-    }
-
-    $resp = json_decode($response->getBody(), TRUE);
+    $resp = AccountHubApi::get("mobileenabled");
     if ($resp['status'] == "OK" && $resp['mobile'] === TRUE) {
         return true;
     } else {
@@ -48,36 +32,25 @@ function mobile_enabled() {
 }
 
 function mobile_valid($username, $code) {
-    $client = new GuzzleHttp\Client();
+    try {
+        $resp = AccountHubApi::get("mobilevalid", ["code" => $code, "username" => $username], true);
 
-    $response = $client
-            ->request('POST', PORTAL_API, [
-        'form_params' => [
-            'key' => PORTAL_KEY,
-            "code" => $code,
-            "username" => $username,
-            'action' => "mobilevalid"
-        ]
-    ]);
-
-    if ($response->getStatusCode() > 299) {
-        return false;
-    }
-
-    $resp = json_decode($response->getBody(), TRUE);
-    if ($resp['status'] == "OK" && $resp['valid'] === TRUE) {
-        return true;
-    } else {
+        if ($resp['status'] == "OK" && $resp['valid'] === TRUE) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (Exception $ex) {
         return false;
     }
 }
 
 if (mobile_enabled() !== TRUE) {
-    exit(json_encode(["status" => "ERROR", "msg" => lang("mobile login disabled", false)]));
+    exit(json_encode(["status" => "ERROR", "msg" => $Strings->get("mobile login disabled", false)]));
 }
 
 // Make sure we have a username and access key
-if (is_empty($VARS['username']) || is_empty($VARS['key'])) {
+if (empty($VARS['username']) || empty($VARS['key'])) {
     http_response_code(401);
     die(json_encode(["status" => "ERROR", "msg" => "Missing username and/or access key."]));
 }
@@ -93,20 +66,21 @@ if (!mobile_valid($VARS['username'], $VARS['key'])) {
 switch ($VARS['action']) {
     case "start_session":
         // Do a web login.
-        if (user_exists($VARS['username'])) {
-            if (get_account_status($VARS['username']) == "NORMAL") {
-                if (authenticate_user($VARS['username'], $VARS['password'], $autherror)) {
-                    if (is_null($access_permission) || account_has_permission($VARS['username'], $access_permission)) {
-                        doLoginUser($VARS['username'], $VARS['password']);
+        $user = User::byUsername($VARS['username']);
+        if ($user->exists()) {
+            if ($user->getStatus()->getString() == "NORMAL") {
+                if ($user->checkPassword($VARS['password'])) {
+                    if (is_null($access_permission) || $user->hasPermission($access_permission)) {
+                        Session::start($user);
                         $_SESSION['mobile'] = true;
                         exit(json_encode(["status" => "OK"]));
                     } else {
-                        exit(json_encode(["status" => "ERROR", "msg" => lang("no admin permission", false)]));
+                        exit(json_encode(["status" => "ERROR", "msg" => $Strings->get("no admin permission", false)]));
                     }
                 }
             }
         }
-        exit(json_encode(["status" => "ERROR", "msg" => lang("login incorrect", false)]));
+        exit(json_encode(["status" => "ERROR", "msg" => $Strings->get("login incorrect", false)]));
     default:
         http_response_code(404);
         die(json_encode(["status" => "ERROR", "msg" => "The requested action is not available."]));

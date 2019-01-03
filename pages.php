@@ -7,12 +7,12 @@
 // List of pages and metadata
 define("PAGES", [
     "home" => [
-        "title" => "home",
+        "title" => "Home",
         "navbar" => true,
         "icon" => "fas fa-home"
     ],
     "users" => [
-        "title" => "users",
+        "title" => "Users",
         "navbar" => true,
         "icon" => "fas fa-users",
         "styles" => [
@@ -36,7 +36,7 @@ define("PAGES", [
         "navbar" => false
     ],
     "groups" => [
-        "title" => "groups",
+        "title" => "Groups",
         "navbar" => true,
         "icon" => "fas fa-object-group",
         "styles" => [
@@ -48,7 +48,7 @@ define("PAGES", [
         ],
     ],
     "authlog" => [
-        "title" => "security log",
+        "title" => "Security Log",
         "navbar" => true,
         "icon" => "fas fa-list",
         "styles" => [
@@ -65,7 +65,7 @@ define("PAGES", [
         "navbar" => false
     ],
     "managers" => [
-        "title" => "managers",
+        "title" => "Managers",
         "navbar" => true,
         "icon" => "fas fa-id-card",
         "styles" => [
@@ -77,7 +77,7 @@ define("PAGES", [
         ]
     ],
     "permissions" => [
-        "title" => "permissions",
+        "title" => "Permissions",
         "navbar" => true,
         "icon" => "fas fa-key",
         "styles" => [

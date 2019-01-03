@@ -25,57 +25,12 @@ function removePerson(p) {
     $("#peoplelist div[data-user=" + p + "]").remove();
 }
 
-var options = {
-    url: "action.php",
-    ajaxSettings: {
-        dataType: "json",
-        method: "GET",
-        data: {
-            action: "autocomplete_user"
-        }
-    },
-    preparePostData: function (data) {
-        data.q = $("#people-box").val();
-        return data;
-    },
-    getValue: function (element) {
-        return element.username;
-    },
-    template: {
-        type: "custom",
-        method: function (value, item) {
-            return item.name + " <i class=\"small\">" + item.username + "</i>";
-        }
-    },
-    list: {
-        onClickEvent: function () {
-            var value = $("#people-box").getSelectedItemData().username;
-            addPerson(value);
-        }
-    },
-    requestDelay: 500,
-    cssClasses: "form-control form-control-sm"
-};
-
-$("#people-box").easyAutocomplete(options);
-
-
 $("#selectgroupbtn").click(function () {
     document.location.href = "app.php?page=groups&gid=" + $("#group-box").val();
 });
 
-$("#people-box").keyup(function (event) {
-    if (event.keyCode == 13) {
-        $("#addpersonbtn").click();
-        event.preventDefault();
-        return false;
-    }
-});
-$("#people-box").keydown(function (event) {
-    if (event.keyCode == 13) {
-        event.preventDefault();
-        return false;
-    }
+$("#people-box").on("change", function (event) {
+    addPerson($("#people-box").val());
 });
 
 $("#addpersonbtn").click(function () {

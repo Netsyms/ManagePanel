@@ -11,26 +11,26 @@ redirectifnotloggedin();
 $groupselected = false;
 $user = "";
 $users = [];
-if ($VARS['gid'] && $database->has('groups', ['groupid' => $VARS['gid']])) {
+if (!empty($VARS['gid']) && $database->has('groups', ['groupid' => $VARS['gid']])) {
     $gid = $VARS['gid'];
     $users = $database->select('assigned_groups', ["[>]accounts" => ["uid" => "uid"]], 'username', ['groupid' => $gid]);
     $groupselected = true;
 }
 ?>
 <div class="row">
-    <div class="col-12 col-xl-6">
+    <div class="col-12">
         <div class="card border-brown">
             <h4 class="card-header text-brown">
-                <i class="fas fa-object-group"></i> <?php lang("group management"); ?>
+                <i class="fas fa-object-group"></i> <?php $Strings->get("group management"); ?>
             </h4>
             <div class="card-body">
                 <div class="row">
                     <form role="form" action="action.php" method="POST" class="col-12 col-sm-6">
-                        <label for="addgroupbox"><i class="fas fa-plus"></i> <?php lang("new group"); ?></label>
+                        <label for="addgroupbox"><i class="fas fa-plus"></i> <?php $Strings->get("new group"); ?></label>
                         <div class="input-group">
-                            <input type="text" name="group" placeholder="<?php lang("enter group name"); ?>" class="form-control" />
+                            <input type="text" name="group" placeholder="<?php $Strings->get("enter group name"); ?>" class="form-control" />
                             <div class="input-group-append">
-                                <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> <?php lang("add"); ?></button>
+                                <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> <?php $Strings->get("add"); ?></button>
                             </div>
                         </div>
                         <input type="hidden" name="action" value="addgroup" />
@@ -38,7 +38,7 @@ if ($VARS['gid'] && $database->has('groups', ['groupid' => $VARS['gid']])) {
                     </form>
 
                     <form role="form" action="action.php" method="POST" class="col-12 col-sm-6">
-                        <label for="addgroupbox"><i class="fas fa-trash"></i> <?php lang("delete group"); ?></label>
+                        <label for="addgroupbox"><i class="fas fa-trash"></i> <?php $Strings->get("delete group"); ?></label>
                         <div class="input-group">
                             <select name="gid" class="form-control">
                                 <?php
@@ -49,7 +49,7 @@ if ($VARS['gid'] && $database->has('groups', ['groupid' => $VARS['gid']])) {
                                 ?>
                             </select>
                             <div class="input-group-append">
-                                <button type="submit" class="btn btn-danger"><i class="fas fa-times"></i> <?php lang("delete"); ?></button>
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-times"></i> <?php $Strings->get("delete"); ?></button>
                             </div>
                         </div>
                         <input type="hidden" name="action" value="rmgroup" />
@@ -61,10 +61,10 @@ if ($VARS['gid'] && $database->has('groups', ['groupid' => $VARS['gid']])) {
         <br />
     </div>
 
-    <div class="col-12 col-xl-6">
+    <div class="col-12">
         <div class="card border-brown">
             <h4 class="card-header text-brown">
-                <i class="fas fa-users"></i> <?php lang("group assignments"); ?>
+                <i class="fas fa-users"></i> <?php $Strings->get("group assignments"); ?>
             </h4>
             <?php if ($groupselected !== false) { ?>
                 <form role="form" action="action.php" method="POST">
@@ -73,7 +73,7 @@ if ($VARS['gid'] && $database->has('groups', ['groupid' => $VARS['gid']])) {
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
-                                <label for="group-box"><i class="fas fa-object-group"></i> <?php lang("group"); ?></label>
+                                <label for="group-box"><i class="fas fa-object-group"></i> <?php $Strings->get("group"); ?></label>
                                 <div class="input-group">
                                     <select <?php if ($groupselected === false) { ?>id="group-box"<?php } ?> class="form-control" value="<?php echo $gid ?>" name="gid" <?php echo ($groupselected !== false ? "readonly" : ""); ?>>
                                         <?php
@@ -89,7 +89,7 @@ if ($VARS['gid'] && $database->has('groups', ['groupid' => $VARS['gid']])) {
                                     </select>
                                     <div class="input-group-append">
                                         <?php if ($groupselected === false) { ?>
-                                            <button class="btn btn-default" type="button" id="selectgroupbtn"><i class="fas fa-chevron-right"></i> <?php lang("next") ?></button>
+                                            <button class="btn btn-default" type="button" id="selectgroupbtn"><i class="fas fa-chevron-right"></i> <?php $Strings->get("next") ?></button>
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -100,11 +100,20 @@ if ($VARS['gid'] && $database->has('groups', ['groupid' => $VARS['gid']])) {
                             ?>
                             <div class="col-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="people-box"><i class="fas fa-users"></i> <?php lang("users"); ?></label>
+                                    <label for="people-box"><i class="fas fa-users"></i> <?php $Strings->get("users"); ?></label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="people-box" placeholder="<?php lang("type to add a person") ?>" />
+                                        <select class="form-control" id="people-box">
+                                            <option></option>
+                                            <?php
+                                            $allusers = $database->select("accounts", "uid", ["deleted" => 0]);
+                                            foreach ($allusers as $user) {
+                                                $u = new User($user);
+                                                echo '<option value="' . htmlentities($u->getUsername()) . '">' . htmlentities($u->getName()) . ' (' . htmlentities($u->getUsername()) . ')</option>';
+                                            }
+                                            ?>
+                                        </select>
                                         <div class="input-group-append">
-                                            <button class="btn btn-default" type="button" id="addpersonbtn"><i class="fas fa-plus"></i> <?php lang("add") ?></button>
+                                            <button class="btn btn-default" type="button" id="addpersonbtn"><i class="fas fa-plus"></i> <?php $Strings->get("add") ?></button>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +142,7 @@ if ($VARS['gid'] && $database->has('groups', ['groupid' => $VARS['gid']])) {
                 </div>
                 <?php if ($groupselected !== false) { ?>
                     <div class="card-footer d-flex">
-                        <button type="submit" class="btn btn-success ml-auto" id="save-btn"><i class="fas fa-save"></i> <?php lang("save"); ?></button>
+                        <button type="submit" class="btn btn-success ml-auto" id="save-btn"><i class="fas fa-save"></i> <?php $Strings->get("save"); ?></button>
                     </div>
                 </form>
             <?php } ?>

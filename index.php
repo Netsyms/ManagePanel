@@ -1,164 +1,131 @@
 <?php
-/* This Source Code Form is subject to the terms of the Mozilla Public
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
 require_once __DIR__ . "/required.php";
-
-require_once __DIR__ . "/lib/login.php";
 
 // if we're logged in, we don't need to be here.
 if (!empty($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && !isset($_GET['permissionerror'])) {
     header('Location: app.php');
+    die();
 }
 
-if (isset($_GET['permissionerror'])) {
-    $alert = lang("no access permission", false);
-}
+/**
+ * Show a simple HTML page with a line of text and a button.  Matches the UI of
+ * the AccountHub login flow.
+ *
+ * @global type $SETTINGS
+ * @global type $SECURE_NONCE
+ * @global type $Strings
+ * @param string $title Text to show, passed through i18n
+ * @param string $button Button text, passed through i18n
+ * @param string $url URL for the button
+ */
+function showHTML(string $title, string $button, string $url) {
+    global $SETTINGS, $SECURE_NONCE, $Strings;
+    ?>
+    <!DOCTYPE html>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-/* Authenticate user */
-$userpass_ok = false;
-$multiauth = false;
-if (checkLoginServer()) {
-    if (!empty($VARS['progress']) && $VARS['progress'] == "1") {
-        if (!CAPTCHA_ENABLED || (CAPTCHA_ENABLED && verifyCaptcheck($VARS['captcheck_session_code'], $VARS['captcheck_selected_answer'], CAPTCHA_SERVER . "/api.php"))) {
-            $errmsg = "";
-            if (authenticate_user($VARS['username'], $VARS['password'], $errmsg)) {
-                switch (get_account_status($VARS['username'])) {
-                    case "LOCKED_OR_DISABLED":
-                        $alert = lang("account locked", false);
-                        break;
-                    case "TERMINATED":
-                        $alert = lang("account terminated", false);
-                        break;
-                    case "CHANGE_PASSWORD":
-                        $alert = lang("password expired", false);
-                    case "NORMAL":
-                        $userpass_ok = true;
-                        break;
-                    case "ALERT_ON_ACCESS":
-                        sendLoginAlertEmail($VARS['username']);
-                        $userpass_ok = true;
-                        break;
-                }
-                if ($userpass_ok) {
-                    $_SESSION['passok'] = true; // stop logins using only username and authcode
-                    if (userHasTOTP($VARS['username'])) {
-                        $multiauth = true;
-                    } else {
-                        doLoginUser($VARS['username'], $VARS['password']);
-                        header('Location: app.php');
-                        die("Logged in, go to app.php");
-                    }
-                }
-            } else {
-                if (!is_empty($errmsg)) {
-                    $alert = lang2("login server error", ['arg' => $errmsg], false);
-                } else {
-                    $alert = lang("login incorrect", false);
-                }
-            }
-        } else {
-            $alert = lang("captcha error", false);
+    <title><?php echo $SETTINGS['site_title']; ?></title>
+
+    <link rel="icon" href="static/img/logo.svg">
+
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <style nonce="<?php echo $SECURE_NONCE; ?>">
+        .display-5 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            line-height: 1.2;
         }
-    } else if (!empty($VARS['progress']) && $VARS['progress'] == "2") {
-        if ($_SESSION['passok'] !== true) {
-            // stop logins using only username and authcode
-            sendError("Password integrity check failed!");
+
+        .banner-image {
+            max-height: 100px;
+            margin: 2em auto;
+            border: 1px solid grey;
+            border-radius: 15%;
         }
-        if (verifyTOTP($VARS['username'], $VARS['authcode'])) {
-            if (doLoginUser($VARS['username'])) {
-                header('Location: app.php');
-                die("Logged in, go to app.php");
-            } else {
-                $alert = lang("login server user data error", false);
-            }
-        } else {
-            $alert = lang("2fa incorrect", false);
-        }
-    }
-} else {
-    $alert = lang("login server unavailable", false);
-}
-header("Link: <static/fonts/Roboto.css>; rel=preload; as=style", false);
-header("Link: <static/css/bootstrap.min.css>; rel=preload; as=style", false);
-header("Link: <static/css/material-color/material-color.min.css>; rel=preload; as=style", false);
-header("Link: <static/css/index.css>; rel=preload; as=style", false);
-header("Link: <static/js/jquery-3.3.1.min.js>; rel=preload; as=script", false);
-header("Link: <static/js/bootstrap.min.js>; rel=preload; as=script", false);
-?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </style>
 
-        <title><?php echo SITE_TITLE; ?></title>
-
-        <link rel="icon" href="static/img/logo.svg">
-
-        <link href="static/css/bootstrap.min.css" rel="stylesheet">
-        <link href="static/css/material-color/material-color.min.css" rel="stylesheet">
-        <link href="static/css/index.css" rel="stylesheet">
-        <?php if (CAPTCHA_ENABLED) { ?>
-            <script src="<?php echo CAPTCHA_SERVER ?>/captcheck.dist.js"></script>
-        <?php } ?>
-    </head>
-    <body>
+    <div class="container mt-4">
         <div class="row justify-content-center">
-            <div class="col-auto">
-                <img class="banner-image" src="static/img/logo.svg" />
+            <div class="col-12 text-center">
+                <img class="banner-image" src="./static/img/logo.svg" />
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="card col-11 col-xs-11 col-sm-8 col-md-6 col-lg-4">
-                <div class="card-body">
-                    <h5 class="card-title"><?php lang("sign in"); ?></h5>
-                    <form action="" method="POST">
-                        <?php
-                        if (!empty($alert)) {
-                            ?>
-                            <div class="alert alert-danger">
-                                <i class="fa fa-fw fa-exclamation-triangle"></i> <?php echo $alert; ?>
-                            </div>
-                            <?php
-                        }
 
-                        if ($multiauth != true) {
-                            ?>
-                            <input type="text" class="form-control" name="username" placeholder="<?php lang("username"); ?>" required="required" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus /><br />
-                            <input type="password" class="form-control" name="password" placeholder="<?php lang("password"); ?>" required="required" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" /><br />
-                            <?php if (CAPTCHA_ENABLED) { ?>
-                                <div class="captcheck_container" data-stylenonce="<?php echo $SECURE_NONCE; ?>"></div>
-                                <br />
-                            <?php } ?>
-                            <input type="hidden" name="progress" value="1" />
-                            <?php
-                        } else if ($multiauth) {
-                            ?>
-                            <div class="alert alert-info">
-                                <?php lang("2fa prompt"); ?>
-                            </div>
-                            <input type="text" class="form-control" name="authcode" placeholder="<?php lang("authcode"); ?>" required="required" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus /><br />
-                            <input type="hidden" name="progress" value="2" />
-                            <input type="hidden" name="username" value="<?php echo $VARS['username']; ?>" />
-                            <?php
-                        }
-                        ?>
-                        <button type="submit" class="btn btn-primary">
-                            <?php lang("continue"); ?>
-                        </button>
-                    </form>
+            <div class="col-12 text-center">
+                <h1 class="display-5 mb-4"><?php $Strings->get($title); ?></h1>
+            </div>
+
+            <div class="col-12 col-sm-8 col-lg-6">
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <a href="<?php echo $url; ?>" class="btn btn-primary btn-block"><?php $Strings->get($button); ?></a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="footer">
-            <?php echo FOOTER_TEXT; ?><br />
-            Copyright &copy; <?php echo date('Y'); ?> <?php echo COPYRIGHT_NAME; ?>
-        </div>
     </div>
-    <script src="static/js/jquery-3.3.1.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <?php
+}
+
+if (!empty($_GET['logout'])) {
+    showHTML("You have been logged out.", "Log in again", "./index.php");
+    die();
+}
+if (empty($_SESSION["login_code"])) {
+    $redirecttologin = true;
+} else {
+    try {
+        $uidinfo = AccountHubApi::get("checkloginkey", ["code" => $_SESSION["login_code"]]);
+        if ($uidinfo["status"] == "ERROR") {
+            throw new Exception();
+        }
+        if (is_numeric($uidinfo['uid'])) {
+            $user = new User($uidinfo['uid'] * 1);
+            foreach ($SETTINGS['permissions'] as $perm) {
+                if (!$user->hasPermission($perm)) {
+                    showHTML("no access permission", "sign out", "./action.php?action=signout");
+                    die();
+                }
+            }
+            Session::start($user);
+            $_SESSION["login_code"] = null;
+            header('Location: app.php');
+            showHTML("Logged in", "Continue", "./app.php");
+            die();
+        } else {
+            throw new Exception();
+        }
+    } catch (Exception $ex) {
+        $redirecttologin = true;
+    }
+}
+
+if ($redirecttologin) {
+    try {
+        $urlbase = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . (($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) ? ":" . $_SERVER['SERVER_PORT'] : "");
+        $iconurl = $urlbase . str_replace("index.php", "", $_SERVER["REQUEST_URI"]) . "static/img/logo.svg";
+        $codedata = AccountHubApi::get("getloginkey", ["appname" => $SETTINGS["site_title"], "appicon" => $iconurl]);
+
+        if ($codedata['status'] != "OK") {
+            throw new Exception($Strings->get("login server unavailable", false));
+        }
+
+        $redirecturl = $urlbase . $_SERVER['REQUEST_URI'];
+
+        $_SESSION["login_code"] = $codedata["code"];
+
+        $locationurl = $codedata["loginurl"] . "?code=" . htmlentities($codedata["code"]) . "&redirect=" . htmlentities($redirecturl);
+        header("Location: $locationurl");
+        showHTML("Continue", "Continue", $locationurl);
+        die();
+    } catch (Exception $ex) {
+        sendError($ex->getMessage());
+    }
+}

@@ -34,7 +34,7 @@ switch ($VARS['order'][0]['column']) {
 }
 
 // search
-if (!is_empty($VARS['search']['value'])) {
+if (!empty($VARS['search']['value'])) {
     $filter = true;
     $wherenolimit = [
         "OR" => [
@@ -78,7 +78,7 @@ if ($filter) {
 }
 $out['recordsFiltered'] = $recordsFiltered;
 for ($i = 0; $i < count($managers); $i++) {
-    $managers[$i]["delbtn"] = '<a class="btn btn-danger btn-xs" href="app.php?page=delmanager&mid=' . $managers[$i]['managerid'] . '&eid=' . $managers[$i]['employeeid'] . '"><i class="fa fa-trash"></i> ' . lang("delete", false) . '</a>';
+    $managers[$i]["delbtn"] = '<a class="btn btn-danger btn-xs" href="app.php?page=delmanager&mid=' . $managers[$i]['managerid'] . '&eid=' . $managers[$i]['employeeid'] . '"><i class="fa fa-trash"></i> ' . $Strings->get("delete", false) . '</a>';
 }
 $out['managers'] = $managers;
 

@@ -51,64 +51,16 @@ function removePermission(permcode) {
     $("#permslist div[data-permcode=" + permcode + "]").remove();
 }
 
-var options = {
-    url: "action.php",
-    ajaxSettings: {
-        dataType: "json",
-        method: "GET",
-        data: {
-            action: "autocomplete_user"
-        }
-    },
-    preparePostData: function (data) {
-        data.q = $("#user-box").val();
-        return data;
-    },
-    getValue: function (element) {
-        return element.username;
-    },
-    template: {
-        type: "custom",
-        method: function (value, item) {
-            return item.name + " <i class=\"small\">" + item.username + "</i>";
-        }
-    },
-    list: {
-        onClickEvent: function () {
-            var value = $("#user-box").getSelectedItemData().username;
-            document.location.href = "app.php?page=permissions&user=" + value;
-        }
-    },
-    requestDelay: 500,
-    cssClasses: "form-control form-control-sm"
-};
-
-if ($("#user-box").get(0).tagName != "SELECT") {
-    $("#user-box").easyAutocomplete(options);
-}
-
-$("#user-box").keyup(function (e) {
-    if (e.keyCode == 13) {
-        $("#selectuserbtn").click();
-    }
+$("#user-box").on("change", function (e) {
+    $("#selectuserbtn").click();
 });
 
 $("#selectuserbtn").click(function () {
     document.location.href = "app.php?page=permissions&user=" + $("#user-box").val();
 });
 
-$("#perms-box").keyup(function (event) {
-    if (event.keyCode == 13) {
-        $("#addpermbtn").click();
-        event.preventDefault();
-        return false;
-    }
-});
-$("#perms-box").keydown(function (event) {
-    if (event.keyCode == 13) {
-        event.preventDefault();
-        return false;
-    }
+$("#perms-box").on("click", function (event) {
+    $("#addpermbtn").click();
 });
 
 $("#addpermbtn").click(function () {
