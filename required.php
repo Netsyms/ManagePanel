@@ -146,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 function dieifnotloggedin() {
+    global $SETTINGS;
     if ($_SESSION['loggedin'] != true) {
         die("You don't have permission to be here.");
     }
@@ -176,6 +177,7 @@ function checkDBError($specials = []) {
 }
 
 function redirectIfNotLoggedIn() {
+    global $SETTINGS;
     if ($_SESSION['loggedin'] !== TRUE) {
         header('Location: ' . $SETTINGS['url'] . '/index.php');
         die();
