@@ -101,10 +101,16 @@ class User {
     /**
      * Check the given plaintext password against the stored hash.
      * @param string $password
+     * @param bool $apppass Set to true to enforce app passwords when 2fa is on.
      * @return bool
      */
-    function checkPassword(string $password): bool {
-        return password_verify($password, $this->passhash);
+    function checkPassword(string $password, bool $apppass = false): bool {
+        $resp = AccountHubApi::get("auth", ['username' => $this->username, 'password' => $password, 'apppass' => ($apppass ? "1" : "0")]);
+        if ($resp['status'] == "OK") {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
