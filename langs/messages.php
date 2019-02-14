@@ -93,4 +93,20 @@ define("MESSAGES", [
         "string" => "group already exists",
         "type" => "danger"
     ],
+    "cannot_revoke_key_in_use" => [
+        "string" => "Cannot revoke that API key, you would lose access to ManagePanel.",
+        "type" => "danger"
+    ],
+    "api_key_revoked" => [
+        "string" => "API key revoked.",
+        "type" => "success"
+    ],
+    "key_already_exists" => [
+        "string" => "That API key already exists.",
+        "type" => "warning"
+    ],
+    "api_key_added" => [
+        "string" => "API key added.",
+        "type" => "success"
+    ],
 ]);

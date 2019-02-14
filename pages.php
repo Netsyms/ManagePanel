@@ -96,6 +96,23 @@ define("PAGES", [
             "static/js/export.js"
         ]
     ],
+    "apikeys" => [
+        "title" => "API Keys",
+        "navbar" => true,
+        "icon" => "fas fa-server",
+        "styles" => [
+            "static/css/datatables.min.css",
+            "static/css/tables.css"
+        ],
+        "scripts" => [
+            "static/js/datatables.min.js",
+            "static/js/apikeys.js"
+        ],
+    ],
+    "addapikey" => [
+        "title" => "Add Key",
+        "navbar" => false
+    ],
     "404" => [
         "title" => "404 error"
     ]

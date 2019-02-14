@@ -115,7 +115,7 @@ END;
 
         <?php
         // Adjust as needed
-        $navbar_breakpoint = "lg";
+        $navbar_breakpoint = "xl";
 
         // For mobile app
         echo "<script nonce=\"$SECURE_NONCE\">var navbar_breakpoint = \"$navbar_breakpoint\";</script>"

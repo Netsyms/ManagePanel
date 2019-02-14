@@ -241,6 +241,30 @@ switch ($VARS['action']) {
         require_once __DIR__ . "/lib/reports.php";
         generateReport($VARS['type'], $VARS['format']);
         break;
+    case "revokeapikey":
+        if (empty($VARS['key'])) {
+            returnToSender("invalid_parameters");
+        }
+        if ($VARS['key'] == $SETTINGS['accounthub']['key']) {
+            returnToSender("cannot_revoke_key_in_use");
+        }
+        $database->delete("apikeys", ['key' => $VARS['key'], "LIMIT" => 1]);
+        returnToSender("api_key_revoked");
+        break;
+    case "addapikey":
+        if (empty($VARS['key']) || empty($VARS['type'])) {
+            returnToSender("invalid_parameters");
+        }
+        $keytypes = ["NONE", "AUTH", "READ", "FULL"];
+        if (!in_array($VARS['type'], $keytypes)) {
+            returnToSender("invalid_parameters");
+        }
+        if ($database->has("apikeys", ["key" => $VARS['key']])) {
+            returnToSender("key_already_exists");
+        }
+        $database->insert("apikeys", ["key" => $VARS['key'], "notes" => $VARS['notes'], "type" => $VARS['type']]);
+        returnToSender("api_key_added");
+        break;
     case "signout":
         session_destroy();
         header('Location: index.php?logout=1');

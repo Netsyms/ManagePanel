@@ -1,0 +1,10 @@
+{
+    "Key": "Key",
+    "Type": "Type",
+    "Notes": "Notes",
+    "Revoke": "Revoke",
+    "Cannot revoke that API key, you would lose access to ManagePanel.": "Cannot revoke that API key, you would lose access to ManagePanel.",
+    "API key revoked.": "API key revoked.",
+    "That API key already exists.": "That API key already exists.",
+    "API key added.": "API key added."
+}
