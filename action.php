@@ -33,6 +33,7 @@ function returnToSender($msg, $arg = "", $additional = []) {
     } else {
         header("Location: app.php?page=" . urlencode($VARS['source']) . $add . "&msg=$msg&arg=$arg");
     }
+    header($header);
     die();
 }
 

@@ -52,6 +52,11 @@ $SETTINGS = [
     ],
     // Set to true to hide the API key in use by ManagePanel from the editor.
     "hide_api_key_in_use" => false,
+    // List of permissions required for API access. Remove to use the value of
+    // "permissions" instead.
+    "api_permissions" => [
+        "ADMIN"
+    ],
     // For supported values, see http://php.net/manual/en/timezones.php
     "timezone" => "America/Denver",
     // Language to use for localization. See langs folder to add a language.
